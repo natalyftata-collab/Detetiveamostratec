@@ -245,15 +245,15 @@ DetetiveGames
 
 # Requisitos Atendidos
 
-✔ Entrada e saída de dados
-✔ Estruturas condicionais
-✔ Laços de repetição
-✔ Modularização com procedimentos
-✔ Sistema investigativo
-✔ Exploração de cenários
-✔ Interação com personagens
-✔ Documentação técnica
-✔ Estrutura pronta para GitHub
+* Entrada e saída de dados
+* Estruturas condicionais
+* Laços de repetição
+* Modularização com procedimentos
+* Sistema investigativo
+* Exploração de cenários
+* Interação com personagens
+* Documentação técnica
+* Estrutura pronta para GitHub
 
 ---
 
