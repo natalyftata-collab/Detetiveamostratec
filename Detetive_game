@@ -1,7 +1,4 @@
-Algoritmo "Detetive_game"
-//
-
-
+Algoritmo "Detetive"
 
 Var
    opcao          : inteiro
@@ -17,8 +14,19 @@ Var
    chave2         : inteiro
    tempou         : inteiro
    mapaEscolhido  : inteiro
+   jogarNovamente : inteiro
 
-   // -------------------------------------------------------------
+   // Variaveis exclusivas do Castelo (Mapa 3)
+   pistaBiblioteca : logico
+   pistaArmas      : logico
+   pistaWilliam    : logico
+   acessoMasmorra  : logico
+   verdadeRainha   : logico
+   decisaoCastelo  : inteiro
+
+   // =============================================================
+   // PROCEDIMENTO: PRINT COM PAUSA
+   // =============================================================
 procedimento print(x : caractere)
 inicio
    escreval(x)
@@ -26,10 +34,37 @@ inicio
    timer(0)
 fimprocedimento
 
-// -------------------------------------------------------------
+// =============================================================
+// PROCEDIMENTO: MENU DE ACAO (Mudar de Sala / Interagir)
+// =============================================================
+procedimento decisaoInt()
+inicio
+   escreval("")
+   escreval("[ 1 ] Mudar de Sala")
+   escreval("")
+   escreval("[ 2 ] Interagir")
+   escreval("")
+   escreva("Decisao: ")
+   leia(decisaoInterna)
+   limpatela
+fimprocedimento
+
+// =============================================================
+// PROCEDIMENTO: ESCOLHA DE SALA - CASA BRANCA (Mapa 1)
+// =============================================================
 procedimento decidirSala()
 inicio
    repita
+      escreval("                 _ _.-'`-._ _")
+      escreval("                ;.'________'.;")
+      escreval("     _________n.[____________].n_________")
+      escreval("    |''_''_''_''||==||==||==||''_''_''_'']")
+      escreval("    |'''''''''''||..||..||..||'''''''''''|")
+      escreval("    |LI LI LI LI||LI||LI||LI||LI LI LI LI|")
+      escreval("    |.. .. .. ..||..||..||..||.. .. .. ..|")
+      escreval("    |LI LI LI LI||LI||LI||LI||LI LI LI LI|")
+      escreval(" ,,;;,;;;,;;;,;;;,;;;,;;;,;;;,;;,;;;,;;;,;;,,")
+      escreval(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
       escreval("")
       escreval("Para onde deseja ir?")
       escreval("[ 1 ] Corredor Central")
@@ -65,558 +100,1903 @@ inicio
    ate (decisao >= 1) e (decisao <= 5)
 fimprocedimento
 
-// -------------------------------------------------------------
-procedimento decisaoInt()
+// =============================================================
+// PROCEDIMENTO: ESCOLHA DE SALA - NAVIO (Mapa 2)
+// =============================================================
+procedimento decidirSalaNavio()
 inicio
-   escreval("")
-   escreval("[ 1 ] Mudar de Sala")
-   escreval("[ 2 ] Interagir")
-   escreval("")
-   escreva("Decisao: ")
-   leia(decisaoInterna)
-   limpatela
+   repita
+      escreval("")
+      escreval("Para onde deseja ir?")
+      escreval("[ 1 ] Conves")
+      escreval("[ 2 ] Sala de Controle")
+      escreval("[ 3 ] Porao")
+      escreval("[ 4 ] Quarto do Capitao")
+      escreval("")
+      escreva("Decisao: ")
+      leia(decisao)
+      limpatela
+
+      se decisao = atual entao
+         print("Voce continua na mesma area.")
+      senao
+         se jaSaiu = falso entao
+            se decisao = 1 entao
+               print("Voce nao saiu do lugar, detetive.")
+               decisao <- 0
+            senao
+               jaSaiu   <- verdadeiro
+               atual    <- decisao
+               descrito <- falso
+            fimse
+         senao
+            se (decisao >= 1) e (decisao <= 4) entao
+               atual    <- decisao
+               descrito <- falso
+            fimse
+         fimse
+      fimse
+   ate (decisao >= 1) e (decisao <= 4)
 fimprocedimento
 
 // =============================================================
-// IN�CIO DO PROGRAMA PRINCIPAL
+// PROCEDIMENTO: ESCOLHA DE SALA - CASTELO (Mapa 3)
+// =============================================================
+procedimento decidirSalaCastelo()
+inicio
+   repita
+      escreval("")
+      escreval("Para onde deseja ir?")
+      escreval("[ 1 ] Salao Principal")
+      escreval("[ 2 ] Biblioteca")
+      escreval("[ 3 ] Sala de Armas")
+      escreval("[ 4 ] Ala Oeste")
+      escreval("[ 5 ] Quartos Reais")
+      se acessoMasmorra = verdadeiro entao
+         escreval("[ 6 ] Masmorras")
+      fimse
+      escreval("")
+      escreva("Decisao: ")
+      leia(decisao)
+      limpatela
+
+      se decisao = atual entao
+         print("Voce continua no mesmo lugar.")
+      senao
+         se jaSaiu = falso entao
+            se decisao = 1 entao
+               print("Voce ainda esta no salao principal.")
+               decisao <- 0
+            senao
+               jaSaiu   <- verdadeiro
+               atual    <- decisao
+               descrito <- falso
+            fimse
+         senao
+            se acessoMasmorra = falso entao
+               se (decisao >= 1) e (decisao <= 5) entao
+                  atual    <- decisao
+                  descrito <- falso
+               fimse
+            senao
+               se (decisao >= 1) e (decisao <= 6) entao
+                  atual    <- decisao
+                  descrito <- falso
+               fimse
+            fimse
+         fimse
+      fimse
+   ate decisao >= 1
+fimprocedimento
+
+// =============================================================
+// PROCEDIMENTO: TELA DE VITORIA
+// =============================================================
+procedimento telaVitoria()
+inicio
+   limpatela
+   escreval("|======================================================================================|")
+   escreval("|                                                                                      |")
+   escreval("|          :'#######:::::'########:'####:'##::::'##:::::::::::::::::::::'#######::     |")
+   escreval("|          '##.... ##:::: ##.....::. ##:: ###::'###::::::::::::::::::::'##.... ##:     |")
+   escreval("|           ##:::: ##:::: ##:::::::: ##:: ####'####::::::::::::::::::::..:::: ##::     |")
+   escreval("|           ##:::: ##:::: ######:::: ##:: ## ### ##:::::::::::::::::::::::: ###:::     |")
+   escreval("|           ##:::: ##:::: ##...::::: ##:: ##. #: ##::::::::::::::::::::::: ##.::::     |")
+   escreval("|           ##:::: ##:::: ##:::::::: ##:: ##:.:: ##::::'###::::'###:::::::..::::::     |")
+   escreval("|           .#######::::: ##:::::::'####: ##:::: ##:::: ###:::: ###:::::::'##:::::     |")
+   escreval("|           :.......::::::..::::::::....::..:::::..:::::...:::::...::::::::..:::::     |")
+   escreval("|                                                                                      |")
+   escreval("|======================================================================================|")
+   escreval("")
+   timer(2000)
+   timer(0)
+fimprocedimento
+
+// =============================================================
+// INICIO DO PROGRAMA PRINCIPAL
 // =============================================================
 Inicio
 
-   // --- TELA DE MENU ---
-   escreval("|======================================================================================|")
-   escreval("|               ____           __           __                                         |")
-   escreval("|             /\  _`\         /\ \__       /\ \__  __                                  |")
-   escreval("|             \ \ \/\ \     __\ \ ,_\    __\ \ ,_\/\_\  __  __     __                  |")
-   escreval("|              \ \ \ \ \  /'__`\ \ \/  /'__`\ \ \/\/\ \/\ \/\ \  /'__`\                |")
-   escreval("|               \ \ \_\ \/\  __/\ \ \_/\  __/\ \ \_\ \ \ \ \_/ |/\  __/                |")
-   escreval("|                \ \____/\ \____\\ \__\ \____\\ \__\\ \_\ \___/ \ \____\               |")
-   escreval("|                 \/___/  \/____/ \/__/\/____/ \/__/ \/_/\/__/   \/____/               |")
-   escreval("|                                                                                      |")
-   escreval("|======================================================================================|")
-   escreval("|                    -%@@@@@@@@#                           =@@*                        |")
-   escreval("|                    @@@@@@@@@@@:               .@%%%%@.   @= @#                       |")
-   escreval("|                   -%+++++++=:--              %@.    .@:  %@ .@                       |")
-   escreval("|                +@@@@@@@@@@@@@@@*=            @+      @@   @: #@                      |")
-   escreval("|                  :**@. *--@@@*@@@@* -#+.      #@      *@@@@@#  @*                    |")
-   escreval("|                     %.        %    @@--*       %@#         .:::@.                    |")
-   escreval("|                   .%        :#%   @@. %+        @@       @@@@@=                      |")
-   escreval("|                +@@* #  %-   %    %@  *=       #@: #       @#                         |")
-   escreval("|           :%@@@@@@@. +:+@+#@@%+ .@# %+       @# =@@#       @#                        |")
-   escreval("|        .%@@@@@@@@@# %@@. @@@@@@%%@@:       +@ %@  @*       #%@@@*::                  |")
-   escreval("|         @@@@@@@@@@@@: @%.*@@@+---.#         @% @*   @-             @@                |")
-   escreval("|        *@@@@@@@@@@@@%#@@+@%=     =-#        @% %@   :@.   #####+-   @#               |")
-   escreval("|        @@@@@@@@@@@@@@@@@@:     :-+@@.       @@ .@    =@.  @@-===*@  :@               |")
-   escreval("|        @@@@@@@@@@@@@@@@ =+.=*-%-@@@@=        @-:@     @@   @:    @=  #@              |")
-   escreval("|        @@@@@@@@@@@@@@@@@::@@@@@@@@@@@         :-    .@@    @@    .@   @@@@           |")
-   escreval("|                                                   %@:   %@:      @@      @@          |")
-   escreval("|                                                 +@=   -@+         @++++@==           |")
-   escreval("|                                                 @%   =@=                             |")
-   escreval("|                                                 *@:  @%                              |")
-   escreval("|                                                  .@% .@+                             |")
-   escreval("|                                                    -@%@.                             |")
-   escreval("|                                                                                      |")
-   escreval("|======================================================================================|")
-   escreval("|                            ESCOLHA UM MAPA PARA JOGAR                                |")
-   escreval("|======================================================================================|")
-   escreval("|                                                                                      |")
-   escreval("|                                [1] Casa Branca                                       |")
-   escreval("|                                [2] Navio                                             |")
-   escreval("|                                [3] Castelo                                           |")
-   escreval("|                                                                                      |")
-   escreval("|======================================================================================|")
+   jogarNovamente <- 1
 
-   repita
-      escreva("                               Digite sua escolha: ")
-      leia(mapaEscolhido)
-      se (mapaEscolhido < 1) ou (mapaEscolhido > 3) entao
-         escreval("Opcao invalida! Digite 1, 2 ou 3.")
-      fimse
-   ate (mapaEscolhido >= 1) e (mapaEscolhido <= 3)
+   // ===========================================================
+   // LOOP PRINCIPAL DO MENU
+   // ===========================================================
+   enquanto jogarNovamente = 1 faca
 
-   limpatela
+      // --- TELA DE MENU ---
+      limpatela
+      escreval("|======================================================================================|")
+      escreval("|                                                                                      |")
+      escreval("|   /$$$$$$$  /$$$$$$$$ /$$$$$$$$ /$$$$$$$$ /$$$$$$$$ /$$$$$$ /$$    /$$ /$$$$$$$$     |")
+      escreval("|  | $$__  $$| $$_____/|__  $$__/| $$_____/|__  $$__/|_  $$_/| $$   | $$| $$_____/     |")
+      escreval("|  | $$  \ $$| $$         | $$   | $$         | $$     | $$  | $$   | $$| $$           |")
+      escreval("|  | $$  | $$| $$$$$      | $$   | $$$$$      | $$     | $$  |  $$ / $$/| $$$$$        |")
+      escreval("|  | $$  | $$| $$__/      | $$   | $$__/      | $$     | $$   \  $$ $$/ | $$__/        |")
+      escreval("|  | $$  | $$| $$         | $$   | $$         | $$     | $$    \  $$$/  | $$           |")
+      escreval("|  | $$$$$$$/| $$$$$$$$   | $$   | $$$$$$$$   | $$    /$$$$$$   \  $/   | $$$$$$$$     |")
+      escreval("|  |_______/ |________/   |__/   |________/   |__/   |______/    \_/    |________/     |")
+      escreval("|                                                                                      |")
+      escreval("|======================================================================================|")
+      escreval("|                    -%@@@@@@@@#                           =@@*                        |")
+      escreval("|                    @@@@@@@@@@@:               .@%%%%@.   @= @#                       |")
+      escreval("|                   -%+++++++=:--              %@.    .@:  %@ .@                       |")
+      escreval("|                +@@@@@@@@@@@@@@@*=            @+      @@   @: #@                      |")
+      escreval("|                  :**@. *--@@@*@@@@* -#+.      #@      *@@@@@#  @*                    |")
+      escreval("|                     %.        %    @@--*       %@#         .:::@.                    |")
+      escreval("|                   .%        :#%   @@. %+        @@       @@@@@=                      |")
+      escreval("|                +@@* #  %-   %    %@  *=       #@: #       @#                         |")
+      escreval("|           :%@@@@@@@. +:+@+#@@%+ .@# %+       @# =@@#       @#                        |")
+      escreval("|        .%@@@@@@@@@# %@@. @@@@@@%%@@:       +@ %@  @*       #%@@@*::                  |")
+      escreval("|         @@@@@@@@@@@@: @%.*@@@+---.#         @% @*   @-             @@                |")
+      escreval("|        *@@@@@@@@@@@@%#@@+@%=     =-#        @% %@   :@.   #####+-   @#               |")
+      escreval("|        @@@@@@@@@@@@@@@@@@:     :-+@@.       @@ .@    =@.  @@-===*@  :@               |")
+      escreval("|        @@@@@@@@@@@@@@@@ =+.=*-%-@@@@=        @-:@     @@   @:    @=  #@              |")
+      escreval("|        @@@@@@@@@@@@@@@@@::@@@@@@@@@@@         :-    .@@    @@    .@   @@@@           |")
+      escreval("|                                                   %@:   %@:      @@      @@          |")
+      escreval("|                                                 +@=   -@+         @++++@==           |")
+      escreval("|                                                 @%   =@=                             |")
+      escreval("|                                                 *@:  @%                              |")
+      escreval("|                                                  .@% .@+                             |")
+      escreval("|                                                    -@%@.                             |")
+      escreval("|                                                                                      |")
+      escreval("|======================================================================================|")
+      escreval("|                            ESCOLHA UM MAPA PARA JOGAR                                |")
+      escreval("|======================================================================================|")
+      escreval("|                                                                                      |")
+      escreval("|                                 [1] Casa Branca                                      |")
+      escreval("|                                 [2] Navio                                            |")
+      escreval("|                                 [3] Castelo                                          |")
+      escreval("|                                                                                      |")
+      escreval("|======================================================================================|")
 
-   // =============================================================
-   // DESVIO PELO MAPA ESCOLHIDO
-   // =============================================================
-   escolha mapaEscolhido
+      repita
+         escreva("                               Digite sua escolha: ")
+         leia(mapaEscolhido)
+         se (mapaEscolhido < 1) ou (mapaEscolhido > 3) entao
+            escreval("Opcao invalida! Digite 1, 2 ou 3.")
+         fimse
+      ate (mapaEscolhido >= 1) e (mapaEscolhido <= 3)
 
-      // ----------------------------------------------------------
-      // MAPA 1 � CASA BRANCA
-      // ----------------------------------------------------------
-   caso 1
-      jaSaiu    <- falso
-      descrito  <- falso
-      atual     <- 0
-      pista1    <- 0
-      pista2    <- 0
-      pista3    <- 0
-      chave1    <- 0
-      chave2    <- 0
-      tempou    <- 60
-      evento    <- falso
+      limpatela
 
-      escreval("======================================================================================")
-      escreval("                        JOGO DE DETETIVE - CASA BRANCA                                ")
-      escreval("======================================================================================")
-      escreval("                                   _ .-'`-. _                                         ")
-      escreval("                                   ;.'____'.;                                         ")
-      escreval("                      _____________n.[____].n_____________                            ")
-      escreval("                     |'''''''''''||==||==||==||''''''''''']                           ")
-      escreval("                     |'''''''''''||..||..||..||'''''''''''|                           ")
-      escreval("                     |LI LI LI LI||LI||LI||LI||LI LI LI LI|                           ")
-      escreval("                     |.. .. .. ..||..||..||..||.. .. .. ..|                           ")
-      escreval("                     |LI LI LI LI||LI||LI||LI||LI LI LI LI|                           ")
-      escreval("                  ,,;;,;;;,;;;,;;;,;;;,;;;,;;;,;;,;;;,;;;,;;,,                        ")
-      escreval("                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;                       ")
-      escreval("======================================================================================")
-      escreval("                          O mist�rio da Casa Branca                                   ")
-      escreval("======================================================================================")
-      escreval("")
-      print("Bem-vindo, detetive. Um assassinato ocorreu na Casa Branca.")
-      print("O presidente foi encontrado morto apos o jantar.")
-      print("Sua missao: descobrir quem foi o culpado.")
-      escreval("")
+      // ===========================================================
+      // DESVIO PELO MAPA ESCOLHIDO
+      // ===========================================================
+      escolha mapaEscolhido
 
-      decidirSala()
+         // ============================================================
+         // MAPA 1 - CASA BRANCA
+         // ============================================================
+      caso 1
+         jaSaiu    <- falso
+         descrito  <- falso
+         atual     <- 0
+         pista1    <- 0
+         pista2    <- 0
+         pista3    <- 0
+         chave1    <- 0
+         chave2    <- 0
+         tempou    <- 60
+         evento    <- falso
 
-      enquanto verdadeiro faca
+         escreval("|======================================================================================|")
+         escreval("|                ____           __           __                                        |")
+         escreval("|               /\  _`\        /\ \__       /\ \__  __                                 |")
+         escreval("|               \ \ \/\ \     __\ \ ,_\   __\ \ ,_\/\_\  __  __     __                 |")
+         escreval("|                \ \ \ \ \  /'__`\ \ \/  /'__`\ \ \/\/\ \/\ \/\ \ /'__`\               |")
+         escreval("|                 \ \ \_\ \/\  __/\ \ \_/\  __/\ \ \_\ \ \ \ \_/ |/\ __/               |")
+         escreval("|                  \ \____/\ \____\\ \__\ \____\\ \__\\ \_\ \___/ \ \____\             |")
+         escreval("|                   \/___/  \/____/ \/__/\/____/ \/__/ \/_/\/__/   \/____/             |")
+         escreval("|                                                                                      |")
+         escreval("|======================================================================================|")
+         escreval("")
+         print("Bem-vindo, detetive. Um assassinato ocorreu na Casa Branca.")
+         print("O presidente foi encontrado morto apos o jantar.")
+         print("Sua missao: descobrir quem foi o culpado.")
+         escreval("")
 
-         escolha atual
+         decidirSala()
 
-            // ------------------------------------------------
-            // CASO 1 � Corredor Central
-            // ------------------------------------------------
-         caso 1
-            se descrito = falso entao
-               print("No Corredor Central, o Agente Moori aparece segurando um arquivo,")
-               print("com aparencia de ser um documento importante.")
-               descrito <- verdadeiro
-            fimse
+         // =========================================================
+         // LOOP INTERNO DO MAPA 1
+         // =========================================================
+         enquanto atual <> 999 faca
 
-            decisaoInterna <- 0
-            enquanto decisaoInterna <> 1 faca
-               decisaoInt()
+            escolha atual
 
-               se decisaoInterna = 2 entao
-                  se (pista1 = 1) e (pista2 = 1) entao
-                     print("Ao perguntar, o agente olha para voce com um sorriso de quem ja esta um passo a frente.")
-                     print("Moori: 'Bom detetive, enquanto voce procurava por pistas eu resolvi verificar")
-                     print(" mais a fundo sobre os nossos suspeitos, e percebi que um ainda mentiu.")
-                     print(" A primeira-dama saiu de seu quarto bem antes do almoco ficar pronto,")
-                     print(" por volta das 7 ate as 8. Pelo seu olhar imagino que ja tenha uma ideia...'")
-                  senao
-                     print("Agente Moori: 'Ainda estou a verificar estes arquivos, detetive...")
-                     print(" Talvez quando voce procurar mais algumas pistas eu tenha algo para compartilhar.'")
+               // ------------------------------------------------
+               // CASO 1 - Corredor Central
+               // ------------------------------------------------
+            caso 1
+               se descrito = falso entao
+                  escreval(" _____________________________________________")
+                  escreval("|.'', \                                 /.,''.|")
+                  escreval("|.'.'',\                               /.''.'.|")
+                  escreval("|.'.'.''\                             /''.'.'.|")
+                  escreval("|.'.'.'.'\                           /'.'.'.'.|")
+                  escreval("|.'.'.'.'.|                         |.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|===;                 ;===|.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|||||',             ,'|||||.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|___|'.|, _______ ,|.'|___|.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|||||'.|'|||||||||'|.'|||||.'.'.'.'.|")
+                  escreval("|,',',',',|___|',|'|-------|'|,'|___|,',',',',|")
+                  escreval("|.'.'.'.'.|||||'.|'|||||||||'|.'|||||.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|___|','   /%%%\   ','|___|.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|||||:'   /#####\     |||||.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|%%%%%%%%%%%%%%%%%%%%%%%%%|.'.'.'.'.|")
+                  escreval("|.'.'.'.','       /#########\       ','.'.'.'.|")
+                  escreval("|.'.'.','        /%%%%%%%%%%%\        ','.'.'.|")
+                  escreval("|.'.','         /#############\         ','.'.|")
+                  escreval("|.','          /%%%%%%%%%%%%%%%\          ','.|")
+                  escreval("|;____________/#################\____________;|")
+                  print("No Corredor Central, o Agente Moori aparece segurando um arquivo,")
+                  print("com aparencia de ser um documento importante.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInterna <- 0
+               enquanto decisaoInterna <> 1 faca
+                  decisaoInt()
+                  se decisaoInterna = 2 entao
+                     se (pista1 = 1) e (pista2 = 1) entao
+                        print("Ao perguntar, o agente olha para voce com um sorriso de quem ja esta um passo a frente.")
+                        print("Moori: 'Bom, detetive, enquanto voce procurava pistas, eu resolvi verificar")
+                        print("mais a fundo sobre os nossos suspeitos e percebi que um deles mentiu.")
+                        print("O vice-presidente, pelo que foi relatado, saiu de seu quarto as 7h e so retornou as 8h.")
+                        print("O mais curioso e que ele carregava algo consigo ao sair, mas nao voltou com o mesmo objeto ao retornar ao quarto.'")
+                        print("Com a nova informacao, voce se sente mais perto da verdade, mesmo que ainda precise encontrar a prova final.")
+                     senao
+                        print("Agente Moori: 'Ainda estou verificando estes arquivos, detetive...")
+                        print("Talvez quando voce encontrar mais algumas pistas eu tenha algo para compartilhar.'")
+                     fimse
                   fimse
+               fimenquanto
+
+               // ------------------------------------------------
+               // CASO 2 - Sala de Jantar
+               // ------------------------------------------------
+            caso 2
+               se descrito = falso entao
+                  print("Na sala de jantar, o aroma de comida ainda quente paira no ar.")
+                  print("O crime ocorreu nesta mesma sala: uma comida envenenada, um presidente assassinado.")
+                  print("O vice-presidente parece composto, mas seus dedos se mexem nervosamente.")
+                  descrito <- verdadeiro
                fimse
-            fimenquanto
 
-            // ------------------------------------------------
-            // CASO 2 � Sala de Jantar
-            // ------------------------------------------------
-         caso 2
-            se descrito = falso entao
-               print("Na sala de jantar, o aroma de comida ainda quente paira no ar.")
-               print("O crime ocorreu nesta mesma sala: uma comida envenenada, um presidente assassinado.")
-               print("O vice-presidente parece composto, mas seus dedos se mexem nervosamente.")
-               descrito <- verdadeiro
-            fimse
+               decisaoInterna <- 0
+               enquanto decisaoInterna <> 1 faca
+                  decisaoInt()
+                  se decisaoInterna = 2 entao
+                     itemSala <- 0
+                     enquanto itemSala <> 3 faca
+                        escreval("")
+                        escreval("=======================================================================================================")
+                        escreval("|                                          )  (    )        =@@=                                      |")
+                        escreval("|     .                                   (,  ,)  (,     -=@@::@@-                             =      |")
+                        escreval("|    @+%#                                 ||  ||  ||     =@@::::@@=                          -%-+*    |")
+                        escreval("|   @#*:=#                                ||  ||  ||     @@.::::.@@                         =+.:%@.   |")
+                        escreval("|   @#.....                               (________)     @....::::@                         ....-@    |")
+                        escreval("|   :@::...                                   |_|        @......:-%                        ...:.+%    |")
+                        escreval("|    =+::..                                   (_)         @....:%+                        ...:.@      |")
+                        escreval("|     #..:..                                  |_|          @....@                         ..:.@.      |")
+                        escreval("|      %.:..               ------------------(___)----------- ..----------               ....++       |")
+                        escreval("|      #*.:.               :::::::::::::::::::::::::::::::::::::::::::::::               .:.:@        |")
+                        escreval("|      -@...::::::::...    :---------------------------------------------:     .:::::::::%- +%        |")
+                        escreval("|       @-.:::::::::::.... :::::::::::::::::::::::::::::::::::::::::::::::  ....::::::::::..##        |")
+                        escreval("|       @%*++***++**+**%@% :---------------------------------------------: .@@#############%@*        |")
+                        escreval("|       @@@@@@@@@@@@@@@@@@ ::::::::::::::::::::::::::::::::::::::::::::::: =@@@@@@@@@@@@@@@@@+        |")
+                        escreval("|       @: *=       @@@@@@ :---------------------------------------------: =@@@@@.       @  %+        |")
+                        escreval("|       @. #=       @@@@@- :::::::::::::::::::::::::::::::::::::::::::::::  #@@@@.       @  **        |")
+                        escreval("|       @  @-      -@@@@    :------------------------------------------:     :@@@@       %. =#        |")
+                        escreval("|      =@  @       @#-@       :::::::::::::::::::::::::::::::::::::::::       =@:@*      =* :@        |")
+                        escreval("|      @* *%      =@ @+          %@:------------------------------@@@-         @ :@      .@  @        |")
+                        escreval("|     .@  @       %+ ++          *@%%@ :::::::::::::::::::::::::::@@+-        @  @.      @# *@        |")
+                        escreval("|     %*          -*  %@%        +@@-                             %@@      :@@-  %           @-       |")
+                        escreval("|                  +@=         = %@                               -@@-+         @@                    |")
+                        escreval("|                              @@*                                  @@@                               |")
+                        escreval("=======================================================================================================")
+                        escreval("")
+                        escreval("O que deseja fazer?")
+                        escreval("[ 1 ] Interrogar o Vice-Presidente")
+                        escreval("[ 2 ] Examinar a mesa de jantar")
+                        escreval("[ 3 ] Voltar")
+                        escreva("Escolha: ")
+                        leia(itemSala)
+                        limpatela
 
-            decisaoInterna <- 0
-            enquanto decisaoInterna <> 1 faca
-               decisaoInt()
-
-               se decisaoInterna = 2 entao
-                  itemSala <- 0
-                  enquanto itemSala <> 3 faca
-                     escreval("")
-                     escreval("O que deseja fazer?")
-                     escreval("[ 1 ] Interrogar o Vice Presidente")
-                     escreval("[ 2 ] Examinar a mesa de jantar")
-                     escreval("[ 3 ] Voltar")
-                     escreva("Escolha: ")
-                     leia(itemSala)
-                     limpatela
-
-                     se itemSala = 1 entao
-                        print("Vice Presidente: 'Ola detetive, sou Robert Lee.")
-                        print(" Estava aqui das 7 ate as 8, hora do jantar.")
-                        print(" Conversamos normalmente ate o presidente engasgar e colapsar.")
-                        print(" De imediato fui buscar ajuda e chamei uma ambulancia,")
-                        print(" mas infelizmente ele nao resistiu.'")
-                     senao
-                        se itemSala = 2 entao
-                           print("Voce examina a mesa com cuidado.")
-                           print("Percebe pequenos tracos de folhas verdes nao comuns em uma cozinha.")
-                           print("Alguem parece ter tentado limpar a area as pressas.")
+                        se itemSala = 1 entao
+                           print("Vice-Presidente: 'Ola, detetive. Sou Robert Lee.")
+                           print("De inicio, ja digo que eu estava em meu quarto das 7h ate a hora do jantar.")
+                           print("No jantar, achei que seria uma noite normal. Comemos e conversamos")
+                           print("tranquilamente, ate o presidente engasgar e colapsar.")
+                           print("De imediato, fui buscar ajuda e chamei uma ambulancia,")
+                           print("mas infelizmente ele nao resistiu.'")
                         senao
-                           se itemSala <> 3 entao
-                              print("Opcao invalida. Tente novamente.")
-                           fimse
-                        fimse
-                     fimse
-                  fimenquanto
-               fimse
-            fimenquanto
-
-            // ------------------------------------------------
-            // CASO 3 � Cozinha
-            // ------------------------------------------------
-         caso 3
-            se descrito = falso entao
-               print("Na cozinha voce sente o cheiro de comida ainda quente.")
-               print("O cozinheiro parece ansioso, pensando nas consequencias")
-               print("de ter sido o unico responsavel pela cozinha nesta noite.")
-               descrito <- verdadeiro
-            fimse
-
-            decisaoInterna <- 0
-            enquanto decisaoInterna <> 1 faca
-               decisaoInt()
-
-               se decisaoInterna = 2 entao
-                  itemSala <- 0
-                  enquanto itemSala <> 3 faca
-                     escreval("")
-                     escreval("O que deseja fazer?")
-                     escreval("[ 1 ] Interrogar o cozinheiro")
-                     escreval("[ 2 ] Examinar a bancada")
-                     escreval("[ 3 ] Voltar")
-                     escreva("Escolha: ")
-                     leia(itemSala)
-                     limpatela
-
-                     se itemSala = 1 entao
-                        se pista2 = 0 entao
-                           print("Cozinheiro: 'Comecei por volta das 6 horas.")
-                           print(" Demorei cerca de 1 hora e meia para completar o jantar.")
-                           print(" Com o vice-presidente pedindo mais comida, atrasei um pouco.")
-                           print(" Fiquei fora da cozinha por um tempo para arrumar a mesa de jantar,")
-                           print(" entao nao sei quem pode ter entrado aqui naquele periodo.'")
-                           pista2 <- 1
-                        senao
-                           print("O cozinheiro acena: 'Ja disse tudo que sabia, detetive.'")
-                        fimse
-                     senao
-                        se itemSala = 2 entao
-                           print("Ha um rastro de po esbranquicado perto da panela maior.")
-                           print("Pode ser farinha... ou pode ser algo completamente diferente.")
-                        senao
-                           se itemSala <> 3 entao
-                              print("Opcao invalida. Tente novamente.")
-                           fimse
-                        fimse
-                     fimse
-                  fimenquanto
-               fimse
-            fimenquanto
-
-            // ------------------------------------------------
-            // CASO 4 � Biblioteca Presidencial Lincoln
-            // ------------------------------------------------
-         caso 4
-            se descrito = falso entao
-               print("Ao entrar na biblioteca voce nota que nao ha ninguem.")
-               print("Apenas voce e varias estantes: historia, eventos, botanica, drama.")
-               print("Em uma mesa ha uma lista de livros retirados da biblioteca.")
-               descrito <- verdadeiro
-            fimse
-
-            decisaoInterna <- 0
-            enquanto decisaoInterna <> 1 faca
-               decisaoInt()
-
-               se decisaoInterna = 2 entao
-                  itemSala <- 0
-                  enquanto itemSala <> 3 faca
-                     escreval("")
-                     escreval("Com o que deseja interagir?")
-                     escreval("[ 1 ] Mesa com lista de livros retirados")
-                     escreval("[ 2 ] Estantes de livros")
-                     escreval("[ 3 ] Voltar")
-                     escreva("Escolha: ")
-                     leia(itemSala)
-                     limpatela
-
-                     se itemSala = 1 entao
-                        se pista1 = 0 entao
-                           print("Um dos livros retirados era sobre botanica e plantas venenosas.")
-                           print("O nome de quem o retirou foi apagado,")
-                           print("e o livro ainda nao foi devolvido.")
-                           pista1 <- 1
-                        senao
-                           print("Voce ja examinou esta lista. O nome permanece apagado.")
-                        fimse
-                     senao
-                        se itemSala = 2 entao
-                           print("Ha uma lacuna visivel na prateleira de botanica,")
-                           print("exatamente onde o livro retirado deveria estar.")
-                        senao
-                           se itemSala <> 3 entao
-                              print("Opcao invalida. Tente novamente.")
-                           fimse
-                        fimse
-                     fimse
-                  fimenquanto
-               fimse
-            fimenquanto
-
-            // ------------------------------------------------
-            // CASO 5 � Quarto Presidencial
-            // ------------------------------------------------
-         caso 5
-            se descrito = falso entao
-               print("Voce entra no Quarto Presidencial. A cama esta arrumada,")
-               print("mas ha sinais de pressa: gaveta entreaberta,")
-               print("perfume forte no ar e janela levemente aberta.")
-               descrito <- verdadeiro
-            fimse
-
-            decisaoInterna <- 0
-            enquanto decisaoInterna <> 1 faca
-               decisaoInt()
-
-               se decisaoInterna = 2 entao
-                  itemSala <- 0
-                  enquanto itemSala <> 4 faca
-                     escreval("")
-                     escreval("O que deseja examinar?")
-                     escreval("[ 1 ] Gaveta entreaberta")
-                     escreval("[ 2 ] Janela")
-                     escreval("[ 3 ] Penteadeira")
-                     escreval("[ 4 ] Voltar")
-                     escreva("Escolha: ")
-                     leia(itemSala)
-                     limpatela
-
-                     se itemSala = 1 entao
-                        se pista3 = 0 entao
-                           print("Dentro da gaveta ha um bilhete dobrado sem assinatura:")
-                           print("'Precisamos conversar antes que seja tarde demais. - 7h.'")
-                           print("A hora coincide com o periodo em que a primeira-dama teria saido do quarto.")
-                           pista3 <- 1
-                        senao
-                           print("Voce ja leu o bilhete. A hora anotada e as 7h.")
-                        fimse
-                     senao
-                        se itemSala = 2 entao
-                           print("A janela da para o jardim lateral da Casa Branca.")
-                           print("Ha marcas na soleira: alguem usou esta rota para sair sem ser visto.")
-                        senao
-                           se itemSala = 3 entao
-                              print("Ha varios frascos de perfume, mas um esta quase vazio")
-                              print("com um rotulo importado, dificil de encontrar.")
+                           se itemSala = 2 entao
+                              print("Voce examina a mesa com cuidado.")
+                              print("Percebe pequenos tracos de folhas verdes nao comuns em uma cozinha.")
+                              print("Alguem parece ter utilizado algum ingrediente e, mesmo assim, teve o trabalho de")
+                              print("tentar apagar seus rastros.")
                            senao
-                              se itemSala <> 4 entao
+                              se itemSala <> 3 entao
                                  print("Opcao invalida. Tente novamente.")
                               fimse
                            fimse
                         fimse
+                     fimenquanto
+                  fimse
+               fimenquanto
+
+               // ------------------------------------------------
+               // CASO 3 - Cozinha
+               // ------------------------------------------------
+            caso 3
+               se descrito = falso entao
+                  print("Na cozinha, voce sente o cheiro de comida ainda quente.")
+                  print("O cozinheiro parece ansioso, pensando nas consequencias")
+                  print("de ter sido o unico responsavel pela cozinha nesta noite.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInterna <- 0
+               enquanto decisaoInterna <> 1 faca
+                  decisaoInt()
+                  se decisaoInterna = 2 entao
+                     itemSala <- 0
+                     enquanto itemSala <> 3 faca
+                        escreval("")
+
+                        escreval("|.-------.-------.|_.----._.----._|.-------.-------.\\\")
+                        escreval("|]       |       [|       .       |]       |       [ \\\")
+                        escreval("||       |       ||     .':'.     ||       |       |  |\\")
+                        escreval("||       |       ||    .' : '.    ||       |       |  |\\\")
+                        escreval("||     (O|O)     ||   .'  :  '.   ||     (O|O)     |  | \\\")
+                        escreval("||       |       ||  .'===:==='.  ||       |       | O|  |\\")
+                        escreval("||       |       ||=='    :    '==||       |       |  |  |\\\")
+                        escreval("|]       |       [|  )    :    (  |]       |       [  |O | \\\")
+                        escreval("||_______|_______||' ____:_____'  ||_______|_______|  |  |  |\\")
+                        escreval("'-----------------'_______________'----------------'  |  |  |\\\")
+                        escreval("|.--------.  |    '---------------'  (o)______)(0)  \ |  |  | \\\")
+                        escreval("||        |::|_________________________________())___\|  | O|  \\\______")
+                        escreval("||        |::|-----______*!*______-------------))( .'.\  |  |   | _____ |")
+                        escreval("||________|::|  _ /       '       \  _        _   (__.'\ |  |O  ||     ||")
+                        escreval("|____________| _  \_______________/     _           (_.'\|  |   ||  _  ||")
+                        escreval(" ___________________________________________      _  (___\  |   ||     ||")
+                        escreval("||.-----.|.------.|.-.-.--.--.-.-.||.-----.||\   _        \ |   ||     ||")
+                        escreval("||| === ||| ==== ||| | |  |  | | |||| === ||| \     _      \|   ||    _||")
+                        escreval("||'-----'|'------'|'-'-'--'--'-'-'||'-----'||. \          _ \   ||     ||")
+                        escreval("||.-----.|.------.|.------.------.||.-----.|| `|\       _    \  || _   ||")
+                        escreval("||| === |||      |||      |      |||| === |||\ | \  _         \ ||_____||")
+                        escreval("||'-----'|]      ||]      |      [||'-----'|| \|. \        _   \|_______|")
+                        escreval("||.-----.||    (O|||    (O|O)    |||.-----.||  | `|\                   ||")
+                        escreval("||| === |||      |||      |      |||| === |||  |\ | \__________________||")
+                        escreval("|||     ||]      ||]      |      [|||     ||| O| \|. |  _____________  ||")
+                        escreval("||'-----'||______|||______|______|||'-----'||  |  | `| |             | ||")
+                        escreval("||_______|________|_______________||_______||  |O |\ | |   _         | ||")
+                        escreval("''-----------------------------------------' \ |  | \| |          _  | ||")
+                        escreval("   ____                 _______               \|  |  | |       _     | ||")
+                        escreval("           _________                  ______   \  |O | |             | ||")
+                        escreval("                                                \ |  | |   _      _  | ||")
+                        escreval("                                _________        \|  | |             | ||")
+
+                        escreval("")
+                        escreval("O que deseja fazer?")
+                        escreval("[ 1 ] Interrogar o cozinheiro")
+                        escreval("[ 2 ] Examinar a bancada")
+                        escreval("[ 3 ] Voltar")
+                        escreva("Escolha: ")
+                        leia(itemSala)
+                        limpatela
+
+                        se itemSala = 1 entao
+                           se pista2 = 0 entao
+                              print("Cozinheiro: 'Comecei por volta das 6h.")
+                              print("Demorei cerca de duas horas e meia para completar o jantar.")
+                              print("Com o vice-presidente pedindo mais comida, me atrasei um pouco.")
+                              print("Fiquei fora da cozinha por um tempo, acho que das 7h ate as 8h, se bem me lembro,")
+                              print("tudo para arrumar a mesa de jantar, ja que estamos com poucos funcionarios hoje.")
+                              print("Por isso, nao sei quem pode ter entrado aqui naquele periodo.'")
+                              pista2 <- 1
+                           senao
+                              print("Voce ja interrogou o cozinheiro. Ele saiu da cozinha das 7h ate as 8h.")
+                           fimse
+                        senao
+                           se itemSala = 2 entao
+                              print("Ha um rastro de po esbranquicado perto da panela maior.")
+                              print("Pode ser farinha... ou pode ser algo completamente diferente misturado dentro.")
+                              print("Ao examinar o saco e seu conteudo, voce percebe que ha rastros de folhas")
+                              print("raladas, jogadas de lado de onde a comida era preparada.")
+                              print("Ao perguntar ao cozinheiro, ele responde que era um ingrediente exotico")
+                              print("que lhe foi entregue por um funcionario a mando da Primeira-Dama.")
+                           senao
+                              se itemSala <> 3 entao
+                                 print("Opcao invalida. Tente novamente.")
+                              fimse
+                           fimse
+                        fimse
+                     fimenquanto
+                  fimse
+               fimenquanto
+
+               // ------------------------------------------------
+               // CASO 4 - Biblioteca Presidencial Lincoln
+               // ------------------------------------------------
+            caso 4
+               se descrito = falso entao
+                  print("")
+                  print("Ao entrar na biblioteca, voce nota que nao ha ninguem.")
+                  print("Apenas voce e varias estantes: historia, eventos, botanica, drama.")
+                  print("Em uma mesa ha uma lista de livros retirados da biblioteca.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInterna <- 0
+               enquanto decisaoInterna <> 1 faca
+                  decisaoInt()
+                  se decisaoInterna = 2 entao
+                     itemSala <- 0
+                     enquanto itemSala <> 3 faca
+                        escreval("")
+
+                        escreval(" _________________________________________________________                                                         _________________________________________________________")
+                        escreval("||-------------------------------------------------------||                                                       ||-------------------------------------------------------||")
+                        escreval("||               ___                   .-.__.-----. .---.||                                                       ||               ___                   .-.__.-----. .---.||")
+                        escreval("||              |===| .---.   __   .---| |XX|<(*)>|_|^^^|||                                                       ||            __|===| .---.   __   .---| |XX|<(*)>|_|^^^|||")
+                        escreval("||         ,  /(|   |_|III|__|''|__|:x:|=|  |     |=| Q |||                                                       ||        ___/ /|   |_|III|__|''|__|:x:|=|  |     |=| Q |||")
+                        escreval("||      _a'{ / (|===|+|   |++|  |==|   | |  |     | | R |||                                                       ||       /  / / |===|+|   |++|  |==|   | |  |     | | R |||")
+                        escreval("||        ' / _(|===|-|   |  |''|  |:x:|=|  |     | | Y |||                                                       ||      /  / /  |===|-|   |  |''|  |:x:|=|  |     | | Y |||")
+                        escreval("||_____  -\{___(|   |-|   |  |  |  |   | |  |     | | Z |||                                                       ||_____/  / /___|   |-|   |  |  |  |   | |  |     | | Z |||")
+                        escreval("||       _(____)|===|+|[I]|DK|''|==|:x:|=|XX|<(*)>|=|^^^|||                                                       ||    /__/_/    |===|+|[I]|DK|''|==|:x:|=|XX|<(*)>|=|^^^|||")
+                        escreval("||              `---^-^---^--^--'--^---^-^--^-----^-^---^||                                                       ||             `---^-^---^--^--'--^---^-^--^-----^-^---^-||")
+                        escreval("||-------------------------------------------------------||                                                       ||-------------------------------------------------------||")
+                        escreval("||_______________________________________________________||                                                       ||_______________________________________________________||")
+                        escreval("||-------------------------------------------------------||                                                       ||-------------------------------------------------------||")
+                        escreval("||.--.    .-._                        .----.             ||                                                       ||.--.    .-._                        .----.             ||")
+                        escreval("|||==|____| |H|___            .---.___|'  '|_____.--.___ ||     __________________________________________________|||==|____| |H|___            .---.___|'  '|_____.--.___ ||")
+                        escreval("|||  |====| | |xxx|_      __ _|+++|=-=|_  _|-=+=-|==|---|||    /                                                 /|||  |====| | |xxx|_      __ _|+++|=-=|_  _|-=+=-|==|---|||")
+                        escreval("|||==|    | | |   | \    |%%|%|   |   |_\/_|     |  | ^ |||   /                                      _QP_       / |||==|    | | |   | \    |%%|%|   |   |_\/_|     |  | ^ |||")
+                        escreval("|||  |    | | |   |\ \   |==|=|   |=-=|_/\_|-=+=-|  | ^ |||  /                                      (  ' )     / .|||  |    | | |   |\ \   |==|=|   |=-=|_/\_|-=+=-|  | ^ |||")
+                        escreval("|||  |    | | |   |_\ \_ |  | |   |   |    |     |  | ^ ||| /                                        \__/     / /||||  |    | | |   |_\ \_ |  | |   |   |    |     |  | ^ |||")
+                        escreval("|||==|====| |H|xxx|  \ \ |''| |+++|=-=|'  '|-=+=-|==|---|||/_________________________________________________/ / ||||==|====| |H|xxx|  \ \ |''| |+++|=-=|'  '|-=+=-|==|---|||")
+                        escreval("||`--^----'-^-^---'   `-' '  '---^---^----^-----^--^---^ |||_________________________________________________| | ||||`--^----'-^-^---'   `-' '  '---^---^----^-----^--^---^||")
+                        escreval("||-------------------------------------------------------|||  _______________________________________________| | |||-------------------------------------------------------||")
+                        escreval("||-------------------------------------------------------||| |                         |                     | | |||-------------------------------------------------------||")
+                        escreval("||               ___                   .-.__.-----. .---.||| |                         |       _______       | | ||| ______         ___                     __.-----. .---.||")
+                        escreval("||              |===| .---.   __   .---| |XX|<(*)>|_|^^^|||| |                         |      (_______)      | | ||||______|       |===| .---.   __   .---.|XX|<(*)>|_|^^^|||")
+                        escreval("||         ,  /(|   |_|III|__|''|__|:x:|=|  |     |=| Q |||| |                         |                     | | ||||_______|      |   |_|III|__|''|__|:x:||  |     |=| Q |||")
+                        escreval("||      _a'{ / (|===|+|   |++|  |==|   | |  |     | | R |||| |                         |_____________________| | ||||________)__   |===|+|   |++|  |==|   ||  |     | | R |||")
+                        escreval("||      '/\\/ _(|===|-|   |  |''|  |:x:|=|  |     | | Y |||| |                         |_____________________| | ||||___________)  |===|-|   |  |''|  |:x:||  |     | | Y |||")
+                        escreval("||_____  -\{___(|   |-|   |  |  |  |   | |  |     | | Z |||| |                                               | | ||||__________)__ |   |-|   |  |  |  |   ||  |     | | Z |||")
+                        escreval("||       _(____)|===|+|[I]|DK|''|==|:x:|=|XX|<(*)>|=|^^^|||| |                                               | | ||||_____________)|===|+|[I]|DK|''|==|:x:||XX|<(*)>|=|^^^|||")
+                        escreval("||              `---^-^---^--^--'--^---^-^--^-----^-^---^||| |                                               | | |||              `---^-^---^--^--'--^---^-^--^-----^-^---^||")
+                        escreval("||-------------------------------------------------------||| |                                               | | |||-------------------------------------------------------||")
+                        escreval("||_______________________________________________________|||_|                                               |_| |||_______________________________________________________||")
+
+
+                        escreval("Com o que deseja interagir?")
+                        escreval("[ 1 ] Mesa com lista de livros retirados")
+                        escreval("[ 2 ] Estantes de livros")
+                        escreval("[ 3 ] Voltar")
+                        escreva("Escolha: ")
+                        leia(itemSala)
+                        limpatela
+
+                        se itemSala = 1 entao
+                           se pista1 = 0 entao
+                              print("Um dos livros retirados era sobre botanica e plantas venenosas.")
+                              print("Certamente uma leitura curiosa para ser retirada na mesma noite do assassinato.")
+                              print("Seria mais facil investigar se o livro ainda estivesse na biblioteca.")
+                              print("O nome de quem o retirou foi apagado")
+                              print("e o livro ainda nao foi devolvido.")
+                              pista1 <- 1
+                           senao
+                              print("Voce ja examinou esta lista. O livro de plantas venenosas permanece desaparecido e o nome, apagado.")
+                           fimse
+                        senao
+                           se itemSala = 2 entao
+                              print("Ha uma lacuna visivel na prateleira de botanica,")
+                              print("exatamente onde o livro retirado deveria estar.")
+                              print("Voce ja sabe que isso pode estar ligado ao caso,")
+                              print("por enquanto continua a procura sabendo que ainda tem muito a descobrir.")
+                           senao
+                              se itemSala <> 3 entao
+                                 print("Opcao invalida. Tente novamente.")
+                              fimse
+                           fimse
+                        fimse
+                     fimenquanto
+                  fimse
+               fimenquanto
+
+               // ------------------------------------------------
+               // CASO 5 - Quarto Presidencial
+               // ------------------------------------------------
+            caso 5
+               se descrito = falso entao
+                  print("Voce entra no Quarto Presidencial. A cama esta arrumada,")
+                  print("mas ha sinais de pressa: gaveta entreaberta,")
+                  print("perfume forte no ar e janela levemente aberta.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInterna <- 0
+               enquanto decisaoInterna <> 1 faca
+                  decisaoInt()
+                  se decisaoInterna = 2 entao
+                     itemSala <- 0
+                     enquanto itemSala <> 4 faca
+                        escreval("")
+                        escreval(" ___________________________________________________________________________________________________________________")
+                        escreval("|                                                     ____                                                           |")
+                        escreval("|                                               _____(____)_____                                                     |")
+                        escreval("|                                     _________(________________)_________                                           |")
+                        escreval("|        _                ___        (____________________________________)    _____________      _____________      |")
+                        escreval("|      _{ }_             /!!!\        :++++++++++++++++++++++++++++++++++:    |  _________  |    |  _________  |     |")
+                        escreval("|     {     }          /!!   !!\      :**********************************:    | |         | |    | |         | |     |")
+                        escreval("|    {       }        |!!     !!|     :++++++++++==++++++++++==++++++++++:    | |         | |    | |         | |     |")
+                        escreval("|    {       }        |!       !|     :*********====........====*********:    | |         | |    | |         | |     |")
+                        escreval("|     {_   _}         |!!     !!|     :+++++++++===-........-===+++++++++:    | |         | |    | |         | |     |")
+                        escreval("|       {_}    _____   \!!   !!/     :*********====..........====*********:   | |_________| |    | |_________| |     |")
+                        escreval("|             ((   ))    \!!!/       :+++++++++===-..........:===+++++++++:   |_____________|    |_____________|     |")
+                        escreval("|            ((  \\ ))              :*********===-............-===*********:                                         |")
+                        escreval("|            ||     ||              :++++++++-==-..............--=-++++++++:                                         |")
+                        escreval("|            || \\  ||             :********-=-..{%%%%%%%%%%%%}..-=-********:   .-======================-.           |")
+                        escreval("|          __((     ))__            :++++++-==-{%%%%%%%%%%%%%%%%}-=-+++++++:    |   . . . . . . . . .    |           |")
+                        escreval("|       __/___(__\\_)___\__          :*****==-{%%%%%%%%%%%%%%%%%%}-=*****:      |   .'.'.'.'.'.'.'.'.'   |           |")
+                        escreval("|      |___________________|         (---)==={%/(______)(______)\%}===(---)     |   .'.'.'.'.'.'.'.'.'   |           |")
+                        escreval("|      |___o__|__o__|__o___|        :****...==/                  \===*****:    (_)______ ________ ______(_)          |")
+                        escreval("|      |____o____|____o____|       :+++++==__/____________________\__-++++:    ||_______I________I_______||          |")
+                        escreval("|      |____o____|____o____|      :*****..{@@@@@@@@@@@@@@@@@@@@@@@@@@}*****:   ||                        ||          |")
+                        escreval("|       ||               ||       :+++++-{@@@@@@@@@@@@@@@@@@@@@@@@@@@@}+++++:  ||________________________||          |")
+                        escreval("|       ||               ||        :****{@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@}***:    v                        v           |")
+                        escreval("|       ||               ||         :+++{@@@@@___________________@@@@@@}++:                                          |")
+                        escreval("|       II               II          :**{@@@@|___o__|__o__|__o___|@@@@@}*:                                           |")
+                        escreval("|                            ________________|____o____|____o____|___________________                                |")
+                        escreval("|____________________________________________________________________________________________________________________|")
+                        escreval("")
+                        escreval("O que deseja examinar?")
+                        escreval("[ 1 ] Gaveta entreaberta")
+                        escreval("[ 2 ] Janela")
+                        escreval("[ 3 ] Penteadeira")
+                        escreval("[ 4 ] Voltar")
+                        escreva("Escolha: ")
+                        leia(itemSala)
+                        limpatela
+
+                        se itemSala = 1 entao
+                           se pista3 = 0 entao
+                              print("Dentro da gaveta ha um bilhete dobrado sem assinatura:")
+                              print("'Precisamos conversar, R.L., antes que seja tarde demais. - 7h.'")
+                              print("O horario coincide com o periodo em que a Primeira-Dama teria saido do quarto.")
+                              pista3 <- 1
+                           senao
+                              print("Voce ja leu o bilhete. O horario anotado e 7h.")
+                           fimse
+                        senao
+                           se itemSala = 2 entao
+                              print("A janela da para o jardim lateral da Casa Branca.")
+                              print("Ha marcas na soleira: alguem usou esta rota para sair sem ser visto.")
+                           senao
+                              se itemSala = 3 entao
+                                 print("Ha varios frascos de perfume, mas um esta quase vazio.")
+                                 print("Com um perfume importado, parece que o presidente nao media esforcos para agraciar sua esposa.")
+                                 print("Mesmo assim, estas plantas parecem ser bem exoticas e seu cheiro esta encoberto pelo perfume no ar.")
+                              senao
+                                 se itemSala <> 4 entao
+                                    print("Opcao invalida. Tente novamente.")
+                                 fimse
+                              fimse
+                           fimse
+                        fimse
+                     fimenquanto
+                  fimse
+               fimenquanto
+
+               // Gatilho - dispara UMA vez apos reunir as 3 pistas
+               se (pista1 = 1) e (pista2 = 1) e (pista3 = 1) e (evento = falso) entao
+                  escreval("")
+                  print("Ao sair do quarto, voce ja comeca a organizar as pistas encontradas:")
+                  print("o livro da biblioteca, a mentira contada pelo Vice-Presidente e as plantas exoticas da Primeira-Dama,")
+                  print("o momento conveniente em que o cozinheiro saiu e os restos de uma planta nao comum aos ingredientes.")
+                  print("Voce ja suspeitava que o Vice-Presidente Robert Lee estava por tras de tudo,")
+                  print("tentando tomar o cargo de seu superior.")
+                  print("Mas ainda precisava encontra-lo. Ao percorrer a Casa Branca,")
+                  print("voce descobre uma porta discreta que nao havia notado antes.")
+                  print("Ela esta levemente aberta... Parece que alguem esteve aqui recentemente.")
+                  print("Voce decide investigar.")
+                  atual    <- 6
+                  descrito <- falso
+                  evento   <- verdadeiro
+               fimse
+
+               // ------------------------------------------------
+               // CASO 6 - Sala Secreta (Escape Room)
+               // ------------------------------------------------
+            caso 6
+               se descrito = falso entao
+                  print("Voce entra na sala secreta pela porta discreta.")
+                  print("Parece um escritorio comum de algum funcionario da Casa Branca.")
+                  print("De repente, a porta tranca por tras de voce.")
+                  print("A voz do Vice-Presidente ecoa:")
+                  print("'Muito bem, detetive, mas e melhor encerrar sua charada agora,")
+                  print("antes que va contar o que sabe para seu amigo da agencia.'")
+                  print("'Espero que nao guarde rancor.'")
+                  escreval("")
+                  print("Preso na sala secreta, voce precisa encontrar uma saida!")
+                  print("Ha um painel na parede com uma fechadura de tres digitos.")
+                  print("Descubra o codigo, encontre as duas chaves e fuja antes que o tempo acabe!")
+                  descrito <- verdadeiro
+                  chave1   <- 0
+                  chave2   <- 0
+                  opcao    <- 0
+               fimse
+
+               enquanto tempou > 0 faca
+                  escreval("")
+                  escreval("==========================================")
+                  escreva("  TEMPO RESTANTE: ")
+                  escreval(tempou)
+                  escreval("------------------------------------------")
+                  escreva("  Chave da Mesa:    ")
+                  se chave1 = 1 entao
+                     escreval("[ENCONTRADA]")
+                  senao
+                     escreval("[nao encontrada]")
+                  fimse
+                  escreva("  Chave da Estante: ")
+                  se chave2 = 1 entao
+                     escreval("[ENCONTRADA]")
+                  senao
+                     escreval("[nao encontrada]")
+                  fimse
+                  escreva("  Codigo do Painel: ")
+                  se opcao = 472 entao
+                     escreval("[CORRETO: 472]")
+                  senao
+                     escreval("[nao inserido]")
+                  fimse
+                  escreval("==========================================")
+                  escreval("")
+                  escreval("O que deseja fazer?")
+                  escreval("[ 1 ] Examinar as janelas")
+                  escreval("[ 2 ] Forcar a porta")
+                  escreval("[ 3 ] Verificar a mesa")
+                  escreval("[ 4 ] Verificar a estante")
+                  escreval("[ 5 ] Examinar o quadro na parede")
+                  escreval("[ 6 ] Examinar o tapete")
+                  escreval("[ 7 ] Tentar inserir o codigo no painel")
+                  se (chave1 = 1) e (chave2 = 1) e (opcao = 472) entao
+                     escreval("[ 8 ] Usar as duas chaves e abrir a passagem")
+                  fimse
+                  escreval("")
+                  escreva("Escolha: ")
+                  leia(itemSala)
+                  limpatela
+
+                  se itemSala = 1 entao
+                     print("Voce tenta abrir as janelas com toda a forca.")
+                     print("Vidro a prova de bala: impossivel de abrir.")
+                     print("O tempo continua passando...")
+                     tempou <- tempou - 5
+                  fimse
+                  se itemSala = 2 entao
+                     print("Voce se joga contra a porta.")
+                     print("Ela nao cede nem um milimetro.")
+                     print("Mas voce ainda nao desiste.")
+                     tempou <- tempou - 5
+                  fimse
+                  se itemSala = 3 entao
+                     se chave1 = 0 entao
+                        print("Voce vasculha a mesa gaveta por gaveta.")
+                        print("No fundo de uma pilha de papeis, seus dedos encontram algo metalico:")
+                        print("uma pequena chave! Guarda-a com cuidado.")
+                        print("Ha tambem um post-it colado na parte inferior da gaveta.")
+                        print("Nele esta escrito: 'ano do incidente - primeiro digito: 4'.")
+                        chave1 <- 1
+                        tempou <- tempou - 10
+                     senao
+                        print("Voce ja vasculhou esta mesa. A chave esta com voce.")
+                        print("O post-it ainda diz: o primeiro digito e 4.")
                      fimse
-                  fimenquanto
-               fimse
-            fimenquanto
-
-            // Gatilho do Caso 6 � s� dispara UMA vez ap�s sair do loop do Quarto
-            se (pista1 = 1) e (pista2 = 1) e (pista3 = 1) e (evento = falso) entao
-               escreval("")
-               print("Ao sair do quarto, voce nota uma porta discreta que nao havia visto antes.")
-               print("Ela esta levemente aberta... Parece que alguem esteve aqui recentemente.")
-               print("Voce decide investigar.")
-               atual    <- 6
-               descrito <- falso
-            fimse
-
-            // ------------------------------------------------
-            // CASO 6 � Sala Secreta (Escape Room)
-            // ------------------------------------------------
-         caso 6
-            se descrito = falso entao
-               print("Voce entra na sala secreta pela porta discreta.")
-               print("Parece um escritorio normal de algum funcionario da Casa Branca.")
-               print("De repente a porta tranca por tras de voce.")
-               print("A voz do Vice Presidente ecoa:")
-               print("'Muito bem detetive, mas e melhor acabar com sua charada agora,")
-               print(" antes que voce va contar o que sabe para seu amigo da agencia.'")
-               print("'Espero que nao guarde rancor.'")
-               escreval("")
-               print("Preso na sala secreta, voce precisa encontrar uma saida!")
-               descrito <- verdadeiro
-               evento   <- verdadeiro
-               chave1   <- 0
-               chave2   <- 0
-            fimse
-
-            // Loop da sala de escape com timer
-            enquanto tempou > 0 faca
-
-               escreval("")
-               escreval("==========================================")
-               escreva("  TEMPO RESTANTE: ")
-               escreval(tempou)
-               escreva("  Chave da Mesa:    ")
-               se chave1 = 1 entao
-                  escreval("[ENCONTRADA]")
-               senao
-                  escreval("[nao encontrada]")
-               fimse
-               escreva("  Chave da Estante: ")
-               se chave2 = 1 entao
-                  escreval("[ENCONTRADA]")
-               senao
-                  escreval("[nao encontrada]")
-               fimse
-               escreval("==========================================")
-               escreval("")
-               escreval("O que deseja fazer?")
-               escreval("[ 1 ] Examinar as janelas")
-               escreval("[ 2 ] Forcar a porta")
-               escreval("[ 3 ] Verificar a mesa")
-               escreval("[ 4 ] Verificar a estante")
-               se (chave1 = 1) e (chave2 = 1) entao
-                  escreval("[ 5 ] Usar as duas chaves e abrir a passagem secreta")
-               fimse
-               escreval("")
-               escreva("Escolha: ")
-               leia(itemSala)
-               limpatela
-
-               se itemSala = 1 entao
-                  print("Voce tenta as janelas com toda a forca.")
-                  print("Vidro a prova de bala � impossivel de abrir.")
-                  print("O tempo continua passando...")
-                  tempou <- tempou - 5
-
-               senao se itemSala = 2 entao
-                  print("Voce se joca contra a porta.")
-                  print("Ela nao cede nem um milimetro.")
-                  print("Mas voce ainda nao desiste.")
-                  tempou <- tempou - 5
-
-               senao se itemSala = 3 entao
-                  se chave1 = 0 entao
-                     print("Voce vasculha a mesa gaveta por gaveta.")
-                     print("No fundo de uma pilha de papeis, seus dedos encontram algo metalico:")
-                     print("uma pequena chave! Guarda com cuidado.")
-                     chave1 <- 1
+                  fimse
+                  se itemSala = 4 entao
+                     se chave2 = 0 entao
+                        print("Voce percorre a estante passando os dedos pelos livros.")
+                        print("Um dos livros oferece resistencia e aciona um mecanismo!")
+                        print("Atras dele ha um compartimento com uma segunda chave.")
+                        print("Junto a ela, um bilhete dobrado com uma anotacao:")
+                        print("'Reuniao confirmada: sala sete. Codigo intermediario = 7.'")
+                        chave2 <- 1
+                        tempou <- tempou - 10
+                     senao
+                        print("Voce ja encontrou a chave desta estante.")
+                        print("O bilhete ainda diz: o digito do meio e 7.")
+                     fimse
+                  fimse
+                  se itemSala = 5 entao
+                     print("Ha um quadro na parede representando a planta baixa da Casa Branca.")
+                     print("No canto inferior, alguem rabiscou a lapis:")
+                     print("'Saida de emergencia - rota final: 2.'")
+                     print("Abaixo, quase imperceptivel: 'ultimo digito do acesso = 2'.")
+                     print("Voce memorizou a informacao.")
+                     tempou <- tempou - 5
+                  fimse
+                  se itemSala = 6 entao
+                     print("Voce levanta a borda do tapete.")
+                     print("Nada de util. Apenas poeira e o frio do marmore.")
+                     print("Perdeu tempo precioso.")
                      tempou <- tempou - 10
-                  senao
-                     print("Voce ja vasculhou esta mesa. A chave esta com voce.")
+                  fimse
+                  se itemSala = 7 entao
+                     escreva("Digite o codigo de tres digitos (ex: 123): ")
+                     leia(decisao)
+                     limpatela
+                     se decisao = 472 entao
+                        print("O painel pisca em verde! Codigo correto: 4 - 7 - 2.")
+                        print("Agora so faltam as duas chaves para abrir a passagem secreta.")
+                        opcao <- 472
+                     senao
+                        print("Codigo incorreto. O painel emite um bipe agudo e trava por alguns segundos.")
+                        print("Voce perdeu tempo com uma tentativa errada.")
+                        tempou <- tempou - 10
+                     fimse
+                  fimse
+                  se itemSala = 8 entao
+                     se (chave1 = 1) e (chave2 = 1) e (opcao = 472) entao
+                        print("Com o codigo correto e as duas chaves, voce se aproxima do painel oculto atras do quadro.")
+                        print("Chave um... chave dois... codigo 4 - 7 - 2...")
+                        print("Um clique grave ecoa pela sala. A passagem se abre!")
+                        print("Voce emerge no Corredor Central, ofegante, mas livre.")
+                        print("O Agente Moori se vira surpreso: 'Detetive?! De onde voce veio?!'")
+                        print("Voce respira fundo e diz ao Agente Moori:")
+                        print("'Eu descobri! Foi o Vice-Presidente Robert Lee.")
+                        print("Ele envenenou a comida com a ajuda da Primeira-Dama.")
+                        print("Va chamar a policia e nao deixe nenhuma saida para ele!'")
+                        escreval("")
+                        print("--- Voce escapou! Seguindo o Vice-Presidente... ---")
+                        atual    <- 7
+                        descrito <- falso
+                        tempou   <- 0
+                     senao
+                        print("Voce ainda nao reuniu tudo o que e necessario.")
+                     fimse
                   fimse
 
-               senao se itemSala = 4 entao
-                  se chave2 = 0 entao
-                     print("Voce percorre a estante passando os dedos pelos livros.")
-                     print("Um dos livros resiste � e um mecanismo!")
-                     print("Atras dele ha um compartimento com uma segunda chave.")
-                     chave2 <- 1
-                     tempou <- tempou - 10
-                  senao
-                     print("Voce ja encontrou a chave desta estante.")
+                  se (itemSala <> 1) e (itemSala <> 2) e (itemSala <> 3) e (itemSala <> 4) e (itemSala <> 5) e (itemSala <> 6) e (itemSala <> 7) e (itemSala <> 8) entao
+                     print("Opcao invalida. Tente novamente.")
                   fimse
 
-               senao se itemSala = 5 entao
+                  se tempou <= 0 entao
+                     se atual = 6 entao
+                        escreval("")
+                        print("O tempo acabou.")
+                        print("O Vice-Presidente retorna armado, pronto para te silenciar.")
+                        print("Voce nao conseguiu escapar.")
+                        escreval("")
+                        print("========== FIM DE JOGO ==========")
+                        atual <- 99
+                     fimse
+                  fimse
+               fimenquanto
+
+               // ------------------------------------------------
+               // CASO 7 - Confronto Final
+               // ------------------------------------------------
+            caso 7
+               se descrito = falso entao
+                  escreval("")
+                  print("Voce corre pelos corredores da Casa Branca atras do Vice-Presidente.")
+                  print("O Agente Moori ja alertou a seguranca: todas as saidas estao bloqueadas.")
+                  print("Voce o encontra no Hall de Entrada, tentando disfarcar a fuga")
+                  print("por entre os guardas que chegam de todos os lados.")
+                  escreval("")
+                  print("Robert Lee para, encurralado. Seus olhos percorrem a sala buscando uma saida")
+                  print("que nao existe mais. Ele se vira para voce com um sorriso amargo:")
+                  print("'Impressionante, detetive. Eu o subestimei.'")
+                  escreval("")
+                  descrito <- verdadeiro
+               fimse
+
+               itemSala <- 0
+               enquanto itemSala <> 3 faca
+                  escreval("")
+                  escreval("Como voce age?")
+                  escreval("[ 1 ] Apresentar todas as evidencias publicamente")
+                  escreval("[ 2 ] Exigir a confissao diante dos guardas")
+                  escreval("[ 3 ] Aguardar a policia em silencio")
+                  escreva("Escolha: ")
+                  leia(itemSala)
+                  limpatela
+
+                  se itemSala = 1 entao
+                     print("Voce detalha cada pista em voz alta: o livro de botanica retirado da biblioteca,")
+                     print("as folhas venenosas encontradas na cozinha no periodo em que o cozinheiro estava fora,")
+                     print("o bilhete encontrado no quarto presidencial com as iniciais R.L. e o horario das 7h,")
+                     print("e a mentira sobre ter permanecido em seu quarto ate a hora do jantar.")
+                     print("Os guardas olham para Robert Lee. Ele abaixa a cabeca.")
+                     print("Robert Lee: 'Voce nao pode provar nada...'")
+                     print("O Agente Moori chega com os documentos: 'Posso, sim. A confissao esta aqui.'")
+                  senao
+                     se itemSala = 2 entao
+                        print("Voce aponta para o Vice-Presidente:")
+                        print("'Robert Lee, confesse agora diante de todas estas testemunhas,")
+                        print("ou deixe que as evidencias falem por voce perante um juri.'")
+                        print("Ele ri, nervoso. Depois, o riso desaparece.")
+                        print("Robert Lee: 'Eu... eu so queria o que era meu por direito. Ele nunca me deixaria chegar la.'")
+                        print("Os guardas avancam imediatamente.")
+                     senao
+                        se itemSala = 3 entao
+                           print("Voce nao diz uma palavra. Apenas mantem o olhar fixo nele enquanto os guardas chegam.")
+                           print("Robert Lee tenta argumentar, mas ninguem o escuta.")
+                           print("A policia chega em minutos e efetua a prisao sem resistencia.")
+                        fimse
+                     fimse
+                  fimse
+               fimenquanto
+
+               escreval("")
+               print("Robert Lee e algemado e conduzido para fora da Casa Branca.")
+               print("A Primeira-Dama e detida logo em seguida, encontrada tentando destruir provas.")
+               print("O Agente Moori aperta sua mao: 'Trabalho exemplar, detetive.'")
+               print("Voce respira fundo, olhando pela ultima vez para os corredores onde tudo aconteceu.")
+               print("O caso esta encerrado.")
+               escreval("")
+
+               telaVitoria()
+
+               escreval("|======================================================================================|")
+               escreval("|                                                                                      |")
+               escreval("|           O Vice-Presidente Robert Lee foi preso e confessou ter                     |")
+               escreval("|           planejado o assassinato com cumplicidade da Primeira-Dama.                 |")
+               escreval("|                                                                                      |")
+               escreval("|           Sua perspicacia e coragem salvaram a verdade.                              |")
+               escreval("|                                                                                      |")
+               escreval("|======================================================================================|")
+
+               escreval("")
+               escreval("|======================================================================================|")
+               escreval("|                    Deseja jogar novamente?                                           |")
+               escreval("|                    [ 1 ] Sim. Voltar ao menu de selecao de mapa                      |")
+               escreval("|                    [ 2 ] Nao. Encerrar o jogo                                        |")
+               escreval("|======================================================================================|")
+               repita
+                  escreva("Escolha: ")
+                  leia(jogarNovamente)
+                  se (jogarNovamente <> 1) e (jogarNovamente <> 2) entao
+                     escreval("Opcao invalida! Digite 1 ou 2.")
+                  fimse
+               ate (jogarNovamente = 1) ou (jogarNovamente = 2)
+
+               se jogarNovamente = 2 entao
+                  jogarNovamente <- 0
+               fimse
+               atual <- 999
+
+            caso 99
+               escreval("")
+               escreval("|======================================================================================|")
+               escreval("|                    Deseja tentar novamente?                                          |")
+               escreval("|                    [ 1 ] Sim. Voltar ao menu de selecao de mapa                      |")
+               escreval("|                    [ 2 ] Nao. Encerrar o jogo                                        |")
+               escreval("|======================================================================================|")
+               repita
+                  escreva("Escolha: ")
+                  leia(jogarNovamente)
+                  se (jogarNovamente <> 1) e (jogarNovamente <> 2) entao
+                     escreval("Opcao invalida! Digite 1 ou 2.")
+                  fimse
+               ate (jogarNovamente = 1) ou (jogarNovamente = 2)
+
+               se jogarNovamente = 2 entao
+                  jogarNovamente <- 0
+               fimse
+               atual <- 999
+
+            outrocaso
+               se atual <> 999 entao
+                  print("Sala desconhecida. Voltando ao Corredor Central.")
+                  atual <- 1
+               fimse
+
+            fimescolha
+
+            se (atual >= 1) e (atual <= 5) entao
+               decidirSala()
+            fimse
+
+         fimenquanto
+         // Fim do Loop Mapa 1
+
+         // ============================================================
+         // MAPA 2 - NAVIO ROYAL CARIBE
+         // ============================================================
+      caso 2
+         jaSaiu    <- falso
+         descrito  <- falso
+         atual     <- 0
+         pista1    <- 0
+         pista2    <- 0
+         pista3    <- 0
+         chave1    <- 0
+         chave2    <- 0
+         tempou    <- 60
+         evento    <- falso
+
+         escreval("======================================================================================")
+         escreval("                        JOGO DE DETETIVE - ROYAL CARIBE                               ")
+         escreval("======================================================================================")
+         escreval("                                     |__                                              ")
+         escreval("                                     |\/                                              ")
+         escreval("                                     ---                                              ")
+         escreval("                                     / | [                                            ")
+         escreval("                              !      | |||                                            ")
+         escreval("                            _/|     _/|-++'                                           ")
+         escreval("                        +  +--|    |--|--|_ |-                                        ")
+         escreval("                     { /|__|  |/\__|  |--- |||__/                                     ")
+         escreval("                    +---------------___[}-_===_.'____               /\                ")
+         escreval("                ____`-' ||___-{]_| _[}-  |     |_[___\==--          \/   _            ")
+         escreval(" __..._____--==/___]_|__|_____________________________[___\==--___,-----' .7          ")
+         escreval("|                                                                   ROYAL /           ")
+         escreval(" \_______________________________________________________________________|            ")
+         escreval("======================================================================================")
+         escreval("")
+         print("Suas sonhadas ferias no cruzeiro Royal Caribe foram interrompidas.")
+         print("O Vice-Capitao o chamou com urgencia: O Capitao foi assassinado!")
+         print("O corpo ainda esta no quarto. O panico ameaca se espalhar entre os passageiros.")
+         print("Sua missao: encontrar o assassino antes que o navio chegue a costa.")
+         escreval("")
+
+         decidirSalaNavio()
+
+         enquanto atual <> 999 faca
+
+            escolha atual
+
+               // ------------------------------------------------
+               // CASO 1 - Conves
+               // ------------------------------------------------
+            caso 1
+               se descrito = falso entao
+
+                  escreval(" ________________________________________________________________________________________________")
+                  escreval("|                                                                                                |")
+                  escreval("|                                                 |                                              |")
+                  escreval("|                            \                   |                    /                          |")
+                  escreval("|                             \                  |                   /                           |")
+                  escreval("|                              \                 |                  /                            |")
+                  escreval("|                               \                |                 /                             |")
+                  escreval("|                                \               |                /                              |")
+                  escreval("|                                 \              |               /                               |")
+                  escreval("|      '*-_                        \             |              /                       _-*'     |")
+                  escreval("|          '*-_                     \            |             /                     _-*'        |")
+                  escreval("|              '*-_                                                               _-*'           |")
+                  escreval("|                  '*-_                                                      _-*'                |")
+                  escreval("|                      '*-_          .----------------------.            _-*'                    |")
+                  escreval("|                          '*-    .--                        ---.     -*'                        |")
+                  escreval("|                                /                               \                               |")
+                  escreval("|                              /                                   \                             |")
+                  escreval("|  '***-___                  /                   |                  \                   ____-*** |")
+                  escreval("|           '***-___         |                    |                   |          ___-***'        |")
+                  escreval("|                  '***-    |                     |                    |    -***'                |")
+                  escreval("|                          |                      |                     |                        |")
+                  escreval("|                          |                      #                     |                        |")
+                  escreval("|                         |                       #                      |                       |")
+                  escreval("|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~###~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|")
+                  escreval("|           ____                                 ###+                  ____                      |")
+                  escreval("|               ',.____           ,.******=*****#####****'++,              ',.____               |")
+                  escreval("|      _____               .**+***'     ##      #####     ## *****'++,.                          |")
+                  escreval("|____,'           ..,'****'   ##___     ##      #####     ##  ____,'##******++,.         _____   |")
+                  escreval("|        .,''******=##        ##   ',__*####################*       ##        ##'****+        ',.|")
+                  escreval("|     **##          ##        ##   *############################*   ##        ##      '***+;     |")
+                  escreval("|,;'**' ##          ##      *#########################################*       ##        __##'***'|")
+                  escreval("|       ##       ___##   *#################################################*  ##  ____,'  ##     |")
+                  escreval("||       ## ____,'   *############################################################*        ##    |")
+                  escreval("|       ##      *##################################################################*      ##     |")
+                  escreval("|       ## +############################################################################* ##     |")
+                  escreval("|   ############################################################################################ |")
+
+                  print("No Conves, a brisa do mar e gelada.")
+                  print("O Vice-Capitao o aguarda impaciente perto dos botes salva-vidas.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInterna <- 0
+               enquanto decisaoInterna <> 1 faca
+                  decisaoInt()
+                  se decisaoInterna = 2 entao
+                     se (pista1 = 1) e (pista2 = 1) e (pista3 = 1) entao
+                        print("Voce se aproxima do Vice-Capitao e mostra as provas que encontrou.")
+                        print("Ele da um sorriso frio e saca uma arma da cintura.")
+                        print("Vice-Capitao: 'Voce e bom, detetive. Bom ate demais...'")
+                        print("'O Capitao ia me denunciar por contrabando, eu nao tive escolha.'")
+                        print("'Infelizmente, voce teve um pequeno acidente e caiu no mar durante a viagem.'")
+                        print("Antes que voce possa reagir, o Vice-Capitao te empurra!")
+                        print("Voce cai por um alcapao escuro, direto na Casa de Maquinas inferior.")
+                        print("A porta de metal tranca acima de voce com um estrondo ensurdecedor.")
+                        evento <- verdadeiro
+                        atual    <- 5
+                        descrito <- falso
+                     senao
+                        print("Vice-Capitao: 'Apresse-se, detetive! Nao podemos atracar com um assassino a solta.'")
+                        print("'Vou manter os passageiros calmos no salao principal. Investigue as salas.'")
+                     fimse
+                  fimse
+               fimenquanto
+
+               // ------------------------------------------------
+               // CASO 2 - Sala de Controle
+               // ------------------------------------------------
+            caso 2
+               se descrito = falso entao
+
+                  escreval(" ____________________________________________________________________________________________________")
+                  escreval("|                                                                                                    |")
+                  escreval("|       ___________________________   __________________________   ___________________________       |")
+                  escreval("|      |                           | |                          | |                           |      |")
+                  escreval("|      |    \\         \\          | |  \\                  \\  | |      \\                   |      |")
+                  escreval("|      |    \\           \\        | |    \\                  \\| |        \\     \\          |      |")
+                  escreval("|      |                           | |             \\           | | \\              \\   \\   |      |")
+                  escreval("|      |        \\                 | |               \\         | |   \\                  \\  |      |")
+                  escreval("|      |          \\       \\      | |       \\                 | |        \\                 |      |")
+                  escreval("|      |                     \\    | | \\      \\          \\   | |          \\   \\          |      |")
+                  escreval("|      |                           | |   \\                  \\ | |   \\            \\   \\   |      |")
+                  escreval("|      |         \\                | |         \\               | |     \\   \\            \\ |      |")
+                  escreval("|      | \\        \\        \\    | |           \\             | |            \\             |      |")
+                  escreval("|      |   \\                  \\  | |  \\              \\      | | \\                  \\    |      |")
+                  escreval("|      |                           | |    \\              \\    | |   \\                  \\  |      |")
+                  escreval("|      ,---------------------------, ,---------------------------,,---------------------------,      |")
+                  escreval("|      |  /---------------------\  | |  /---------------------\  ||  /---------------------\  |      |")
+                  escreval("|      | |                       | | | |                       | || |                       | |      |")
+                  escreval("|      | |                       | | | |                       | || |                       | |      |")
+                  escreval("|      | |                       | | | |                       | || |                       | |      |")
+                  escreval("|      | |                       | | | |                       | || |                       | |      |")
+                  escreval("|      | |                       | | | |                       | || |                       | |      |")
+                  escreval("|      |  \_____________________/  | |  \_____________________/  ||  \_____________________/  |      |")
+                  escreval("|      |___________________________| |___________________________||___________________________|      |")
+                  escreval("|  ____|  ______________________ |___                        ______________                   |___   |")
+                  escreval("|  \     |[][][][][][][][][][][]|   |   [_] [_] [_] [_] [_] |OOOO|OOOO|OOOO|  [_] [_] [_] [_]    /   |")
+                  escreval("|   \    |[][][][][][][][][][][]|   |            @@@@       |OOOO|OOOO|OOOO|                    /    |")
+                  escreval("|    \   | [][][][][][][][][][] |  / \    [_] @@] [_] @@ [_]|OOOO|OOOO|OOOO| [ ] [ ] [ ] [ ]   /     |")
+                  escreval("|     \  |[][][][[_______][][][]| |[°]|      @  @    @  @   |OOOO|OOOO|OOOO|                  /      |")
+                  escreval("|      \ |______________________|  `-´  [_] @_]  @_]@ [_]@  |OOOO|OOOO|OOOO|  [_] [_] [_]    /       |")
+                  escreval("|       \___________________________________@_____@@_____@__________________________________/        |")
+                  escreval("|           |::::::::,,,,,,:::::::::,,,,::::@::::@::@::::@::::,,,,:::::::::,,,,,::::::::|            |")
+                  escreval("|           |::::::::,,,,,,:::::::::,,,,:::::@::@::::@::@:::::,,,,:::::::::,,,,,::::::::|            |")
+                  escreval("|           |::::::::,,,,,,:::::::::,,,,::::::@@::::::@@-:::::,,,,:::::::::,,,,,::::::::|            |")
+                  escreval("|           |::::::::,,,,,,:::::::::,,,,:::::::::@@@@:::::::::,,,,:::::::::,,,,,::::::::|            |")
+                  escreval("|____________________________________________________________________________________________________|")
+
+                  print("Na Sala de Controle, luzes piscam nos radares.")
+                  print("O Imediato de navegacao esta focado nos mapas, suando muito.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInterna <- 0
+               enquanto decisaoInterna <> 1 faca
+                  decisaoInt()
+                  se decisaoInterna = 2 entao
+                     itemSala <- 0
+                     enquanto itemSala <> 3 faca
+                        escreval("")
+                        escreval("O que deseja fazer?")
+                        escreval("[ 1 ] Falar com o Imediato")
+                        escreval("[ 2 ] Examinar o painel de navegacao")
+                        escreval("[ 3 ] Voltar")
+                        escreva("Escolha: ")
+                        leia(itemSala)
+                        limpatela
+
+                        se itemSala = 1 entao
+                           print("Imediato: 'O Capitao brigou feio com o Vice-Capitao ontem a noite.")
+                           print("Algo sobre os manifestos de carga do porao nao estarem batendo.'")
+                        senao
+                           se itemSala = 2 entao
+                              se pista1 = 0 entao
+                                 print("Verificando os registros, voce nota que o alarme das cameras de seguranca")
+                                 print("foi desativado manualmente as 02:00 da manha. Requer nivel de acesso alto.")
+                                 pista1 <- 1
+                              senao
+                                 print("Os registros continuam mostrando a desativacao das cameras as 02:00.")
+                              fimse
+                           senao
+                              se itemSala <> 3 entao
+                                 print("Opcao invalida. Tente novamente.")
+                              fimse
+                           fimse
+                        fimse
+                     fimenquanto
+                  fimse
+               fimenquanto
+
+               // ------------------------------------------------
+               // CASO 3 - Porao
+               // ------------------------------------------------
+            caso 3
+               se descrito = falso entao
+                  escreval("======================================================================")
+                  escreval("|| . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .||")
+                  escreval("||       ____________________                 \_/                   ||")
+                  escreval("||      /                   /|               --O--              [__]||")
+                  escreval("||     /   CONTRABANDO     / |                /_\               (~~)||")
+                  escreval("||    /___________________/  |                | |               |__|||")
+                  escreval("||    |   _   _   _   _   |  |   ___          | |               |__|||")
+                  escreval("||    |  | | | | | | | |  |  |  /   \         | |   ____  ____  |__|||")
+                  escreval("||    |  |_| |_| |_| |_|  | /  | DXL |        | |  /    \/    \ |__|||")
+                  escreval("||    |___________________|/    \___/         |_|  \____/\____/ |__|||")
+                  escreval("||__________________________________________________________________||")
+                  escreval("======================================================================")
+                  print("O Porao e escuro, umido e cheira a oleo diesel e sal.")
+                  print("Caixas estao empilhadas de forma irregular e o zelador varre o chao.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInterna <- 0
+               enquanto decisaoInterna <> 1 faca
+                  decisaoInt()
+                  se decisaoInterna = 2 entao
+                     itemSala <- 0
+                     enquanto itemSala <> 3 faca
+                        escreval("")
+                        escreval("O que deseja fazer?")
+                        escreval("[ 1 ] Interrogar o Zelador")
+                        escreval("[ 2 ] Investigar as caixas")
+                        escreval("[ 3 ] Voltar")
+                        escreva("Escolha: ")
+                        leia(itemSala)
+                        limpatela
+
+                        se itemSala = 1 entao
+                           print("Zelador: 'Detetive, achei estranho, mas me mandaram limpar a area dos fundos")
+                           print("logo cedo. Nao sei de nada, so sigo ordens dos oficiais.'")
+                        senao
+                           se itemSala = 2 entao
+                              se pista2 = 0 entao
+                                 print("Atras de umas caixas contrabandeadas, voce encontra um canivete naval.")
+                                 print("Esta manchado de sangue e possui as iniciais 'V.C.' cravadas na madeira.")
+                                 pista2 <- 1
+                              senao
+                                 print("Voce ja encontrou o canivete manchado aqui.")
+                              fimse
+                           senao
+                              se itemSala <> 3 entao
+                                 print("Opcao invalida. Tente novamente.")
+                              fimse
+                           fimse
+                        fimse
+                     fimenquanto
+                  fimse
+               fimenquanto
+
+               // ------------------------------------------------
+               // CASO 4 - Quarto do Capitao
+               // ------------------------------------------------
+            caso 4
+               se descrito = falso entao
+                  escreval(" ____________________________________________________________________________________________________")
+                  escreval("|      .::::::::-=:                                                                   :=:::::::::::::|")
+                  escreval("|          ...::::::.--.                                                         :-::::::::::::      |")
+                  escreval("|                .::::::::::                                                 .::..:::::::            |")
+                  escreval("|                      .::::+=---------------------------------------------*::::::                   |")
+                  escreval("|        .:==++:                             ___________       _______                  .=+=-.       |")
+                  escreval("|       -=+: -*#+.        :=.               |           |     |       |     :-.        +**=:==+.     |")
+                  escreval("|      ==:     -+#       *:-#-              |           |     |       |    #+.==      =+=     ==.    |")
+                  escreval("|      .=       =*-     -=  =#              |           |     |       |   :*:  #      %=       ==    |")
+                  escreval("|     :--       =*-     =-  :#              |           |     |       |   :*.  #      %=       +.    |")
+                  escreval("|     .=+      .=#.     .*.:#=              |           |     |_______|    #+.:*      *+:      +-    |")
+                  escreval("|      ==-    :+*-       :=+-               | _         |                   ==-       :*=:    ==:    |")
+                  escreval("|       --+++%*=:                           |(_)        | ____________________         .=+%++==.     |")
+                  escreval("|          :-.          :::___________      |           || /       \/       \ |::          .:.       |")
+                  escreval("|                 :::::::_________   /|     |           || |       ||       | |:::::::.              |")
+                  escreval("|           ::::::::::::::::::.:-/  / |     |           ||_\_______/\_______/_|:::::::::::::.        |")
+                  escreval("|      ::::::::::::::::::..... ./  /  |     |           ||\                      ::::::::::::::::.   |")
+                  escreval("|.::::::::::::       ....:::-=+/  /|  |     |           || \                          :::::::::::::::|")
+                  escreval("|::::::::.                 .::/  / |  |     |           ||  \                              ::::::::::|")
+                  escreval("|:::.                    .:::´  /  |[]|                  \   \                                 ::::::|")
+                  escreval("|::                    .:.:::  /   |  /                   \   \                                   :::|")
+                  escreval("|:                   ::.:::::||  []| /                     \   \                                     |")
+                  escreval("|                  ::.:::-:::||    |/                       \   \                                    |")
+                  escreval("|               .:::::     ::||    /                         \   \                                   |")
+                  escreval("|             .:::.:       ::||   /                           \   \                                  |")
+                  escreval("|:::::::::::::::::         ::||  /                             \   \                                 |")
+                  escreval("|:::::::::::::::           ::|| /                               \   \______________________________  |")
+                  escreval("|:::::::::::::::           ::||/                                 \                                 | |")
+                  escreval("|          :::::                                                  \________________________________| |")
+                  escreval("|____________________________________________________________________________________________________|")
+                  escreval("")
+                  print("O Quarto do Capitao esta isolado. A cena do crime.")
+                  print("O corpo ja foi levado, mas a sala inteira esta revirada.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInterna <- 0
+               enquanto decisaoInterna <> 1 faca
+                  decisaoInt()
+                  se decisaoInterna = 2 entao
+                     itemSala <- 0
+                     enquanto itemSala <> 3 faca
+                        escreval("")
+                        escreval("O que deseja examinar?")
+                        escreval("[ 1 ] A mesa do Capitao")
+                        escreval("[ 2 ] A escotilha (janela)")
+                        escreval("[ 3 ] Voltar")
+                        escreva("Escolha: ")
+                        leia(itemSala)
+                        limpatela
+
+                        se itemSala = 1 entao
+                           se pista3 = 0 entao
+                              print("Ha um manifesto de carga assinado com sangue. O Capitao tentou sublinhar")
+                              print("o nome do Vice-Capitao antes de dar seu ultimo suspiro.")
+                              pista3 <- 1
+                           senao
+                              print("Voce ja encontrou o manifesto de carga sujo de sangue.")
+                           fimse
+                        senao
+                           se itemSala = 2 entao
+                              print("A escotilha esta trancada por dentro. O assassino saiu pela porta principal.")
+                           senao
+                              se itemSala <> 3 entao
+                                 print("Opcao invalida. Tente novamente.")
+                              fimse
+                           fimse
+                        fimse
+                     fimenquanto
+                  fimse
+               fimenquanto
+
+               // ------------------------------------------------
+               // CASO 5 - Casa de Maquinas (Escape Room do Navio)
+               // ------------------------------------------------
+            caso 5
+               se descrito = falso entao
+
+                  escreval("=========================================================================")
+                  escreval("||                          | |         | |                            ||")
+                  escreval("||                          | |         | |                            ||")
+                  escreval("||                       ___| |_________| |__                          ||")
+                  escreval("||                      /        @@@@        \                         ||")
+                  escreval("||                      |       @\  /@       |                         ||")
+                  escreval("||                      |      @  \/  @      |                         ||")
+                  escreval("||                      |      @  /\  @      |                         ||")
+                  escreval("||                      |       @/  \@       |                         ||")
+                  escreval("|| [PRESSAO: ALTA]      |        @@@@        |       (O) ALARME        ||")
+                  escreval("||      /   \            \___________________/          | |========|   ||")
+                  escreval("||     |  O  |            |  | |  | |  |   |           _|_|___     |   ||")
+                  escreval("||      \___/             |  | |  | |  |   |          | VAZAO |    |   ||")
+                  escreval("||   ============         |  | |  | |  |   |          |_______|    |   ||")
+                  escreval("||   ||        ||         |  | |  | |  |   |           |_|_|_|     |   ||")
+                  escreval("||___||________||_______ _| _|_|__|_|__|__ |___ ________\___/______|___||")
+                  escreval("|| . ~ . . ~ .  ~   . ~  .   ~ . ~  . . ~ . ~. ~  .  ~ . ~  .  . ~ .  ~||")
+                  escreval("||~  .  ~  .  ~  . ~  .  ~  .  ~  .  ~  . ~  . ~ . ~  .  ~  . ~  .  ~ .||")
+                  escreval("=========================================================================")
+
+                  print("Voce esta preso na Casa de Maquinas! O barulho dos motores e absurdamente alto.")
+                  print("Uma valvula estourou com a sua queda e o compartimento esta enchendo de agua.")
+                  print("Voce precisa abrir a escotilha de emergencia antes de afogar!")
+                  descrito <- verdadeiro
+                  chave1   <- 0
+                  chave2   <- 0
+               fimse
+
+               enquanto tempou > 0 faca
+                  escreval("")
+                  escreval("==========================================")
+                  escreva("  AGUA SUBINDO (TEMPO): ")
+                  escreval(tempou)
+                  escreval("------------------------------------------")
+                  escreva("  Manivela Vermelha:    ")
+                  se chave1 = 1 entao
+                     escreval("[ENCONTRADA]")
+                  senao
+                     escreval("[nao encontrada]")
+                  fimse
+                  escreva("  Manivela Azul:        ")
+                  se chave2 = 1 entao
+                     escreval("[ENCONTRADA]")
+                  senao
+                     escreval("[nao encontrada]")
+                  fimse
+                  escreval("==========================================")
+                  escreval("")
+                  escreval("O que deseja fazer?")
+                  escreval("[ 1 ] Gritar por ajuda")
+                  escreval("[ 2 ] Forcar a escotilha principal")
+                  escreval("[ 3 ] Procurar na caixa de ferramentas")
+                  escreval("[ 4 ] Vasculhar o painel de fusiveis")
                   se (chave1 = 1) e (chave2 = 1) entao
-                     print("Com as duas chaves, voce localiza o painel oculto atras do quadro.")
-                     print("Chave um... chave dois... um clique. A passagem se abre!")
-                     print("Voce emerge no Corredor Central, ofegante, mas livre.")
-                     print("O Agente Moori se vira surpreso: 'Detetive?! De onde voce veio?!'")
-                     print("Voce respira fundo. Agora e hora de terminar isso.")
-                     escreval("")
-                     print("--- Voce escapou! Retornando ao Corredor Central... ---")
-                     atual    <- 1
-                     descrito <- falso
-                     tempou   <- 0
-                  senao
-                     print("Voce ainda nao tem as duas chaves necessarias.")
+                     escreval("[ 5 ] Encaixar as duas manivelas e girar a porta de emergencia")
+                  fimse
+                  escreval("")
+                  escreva("Escolha: ")
+                  leia(itemSala)
+                  limpatela
+
+                  se itemSala = 1 entao
+                     print("Voce grita, mas o som do motor abafa sua voz completamente.")
+                     print("A agua sobe mais um pouco...")
+                     tempou <- tempou - 5
+                  fimse
+                  se itemSala = 2 entao
+                     print("O alcapao de ferro e pesado e esta trancado por fora. Impossivel abrir na forca.")
+                     tempou <- tempou - 5
+                  fimse
+                  se itemSala = 3 entao
+                     se chave1 = 0 entao
+                        print("Vasculhando uma velha caixa de ferramentas afundada, voce encontra a Manivela Vermelha!")
+                        chave1 <- 1
+                        tempou <- tempou - 10
+                     senao
+                        print("Voce ja esvaziou a caixa de ferramentas.")
+                     fimse
+                  fimse
+                  se itemSala = 4 entao
+                     se chave2 = 0 entao
+                        print("Dentro do painel de fusiveis, escorada por um fio, esta a Manivela Azul!")
+                        chave2 <- 1
+                        tempou <- tempou - 10
+                     senao
+                        print("Nao ha mais nada util no painel.")
+                     fimse
+                  fimse
+                  se itemSala = 5 entao
+                     se (chave1 = 1) e (chave2 = 1) entao
+                        print("Voce corre ate a escotilha de vazao, encaixa as duas manivelas e gira com forca.")
+                        print("A porta cede! A agua escoa e voce sobe pela escada de emergencia ate o Conves.")
+                        print("O Vice-Capitao congela de pavor ao ver voce voltando com a seguranca do navio.")
+                        escreval("")
+                        print("A seguranca do navio imobiliza o Vice-Capitao imediatamente.")
+                        print("'Impossivel... voce deveria ter afundado!' grita ele enquanto e algemado.")
+                        print("O Imediato agradece voce: 'O Capitao pode descansar em paz agora, detetive.'")
+                        print("O Royal Caribe segue viagem. O caso esta encerrado.")
+                        escreval("")
+
+                        telaVitoria()
+
+                        escreval("|======================================================================================|")
+                        escreval("|                                                                                      |")
+                        escreval("|           O Vice-Capitao foi preso e confessou o assassinato do Capitao.            |")
+                        escreval("|           O esquema de contrabando foi desmantelado.                                 |")
+                        escreval("|                                                                                      |")
+                        escreval("|           Sua coragem e perspicacia salvaram todos a bordo.                          |")
+                        escreval("|                                                                                      |")
+                        escreval("|======================================================================================|")
+
+                        escreval("")
+                        escreval("|======================================================================================|")
+                        escreval("|                    Deseja jogar novamente?                                           |")
+                        escreval("|                    [ 1 ] Sim. Voltar ao menu de selecao de mapa                      |")
+                        escreval("|                    [ 2 ] Nao. Encerrar o jogo                                        |")
+                        escreval("|======================================================================================|")
+                        repita
+                           escreva("Escolha: ")
+                           leia(jogarNovamente)
+                           se (jogarNovamente <> 1) e (jogarNovamente <> 2) entao
+                              escreval("Opcao invalida! Digite 1 ou 2.")
+                           fimse
+                        ate (jogarNovamente = 1) ou (jogarNovamente = 2)
+
+                        se jogarNovamente = 2 entao
+                           jogarNovamente <- 0
+                        fimse
+                        atual  <- 999
+                        tempou <- 0
+                     senao
+                        print("Voce ainda precisa encontrar as duas manivelas.")
+                     fimse
                   fimse
 
-               senao
-                  print("Opcao invalida. Tente novamente.")
-               fimse
-
-               // Game over por tempo
-               se tempou <= 0 entao
-                  se atual = 6 entao
-                     escreval("")
-                     print("O tempo acabou.")
-                     print("O Vice Presidente retorna. Voce nao conseguiu escapar.")
-                     escreval("")
-                     print("========== FIM DE JOGO ==========")
-                     atual <- 99
+                  se (itemSala <> 1) e (itemSala <> 2) e (itemSala <> 3) e (itemSala <> 4) e (itemSala <> 5) entao
+                     print("Opcao invalida. Tente novamente.")
                   fimse
+
+                  se tempou <= 0 entao
+                     se atual = 5 entao
+                        escreval("")
+                        print("A agua cobriu o teto. Nao ha mais saida.")
+                        print("O segredo do Royal Caribe afundou com voce.")
+                        escreval("")
+                        print("========== FIM DE JOGO ==========")
+                        escreval("")
+                        escreval("|======================================================================================|")
+                        escreval("|                    Deseja tentar novamente?                                          |")
+                        escreval("|                    [ 1 ] Sim. Voltar ao menu de selecao de mapa                      |")
+                        escreval("|                    [ 2 ] Nao. Encerrar o jogo                                        |")
+                        escreval("|======================================================================================|")
+                        repita
+                           escreva("Escolha: ")
+                           leia(jogarNovamente)
+                           se (jogarNovamente <> 1) e (jogarNovamente <> 2) entao
+                              escreval("Opcao invalida! Digite 1 ou 2.")
+                           fimse
+                        ate (jogarNovamente = 1) ou (jogarNovamente = 2)
+                        se jogarNovamente = 2 entao
+                           jogarNovamente <- 0
+                        fimse
+                        atual <- 999
+                     fimse
+                  fimse
+               fimenquanto
+
+            outrocaso
+               se atual <> 999 entao
+                  print("Area restrita. Voltando ao Conves.")
+                  atual <- 1
                fimse
 
-            fimenquanto
+            fimescolha
 
-         outrocaso
-            se atual <> 99 entao
-               print("Sala desconhecida. Voltando ao Corredor Central.")
-               atual <- 1
+            se (atual >= 1) e (atual <= 4) entao
+               decidirSalaNavio()
             fimse
 
-         fimescolha
+         fimenquanto
+         // Fim do Loop Mapa 2
 
-         // Chama decidirSala apenas quando nao esta na sala secreta ou em game over
-         se (atual <> 6) e (atual <> 99) entao
-            decidirSala()
+         // ============================================================
+         // MAPA 3 - CASTELO RAVENSHOLLOW
+         // ============================================================
+      caso 3
+         pistaBiblioteca <- falso
+         pistaArmas      <- falso
+         pistaWilliam    <- falso
+         acessoMasmorra  <- falso
+         verdadeRainha   <- falso
+         jaSaiu          <- falso
+         descrito        <- falso
+         atual           <- 1
+
+         limpatela
+         escreval("==========================================================================")
+         escreval("                  JOGO DE DETETIVE - CASTELO RAVENSHOLLOW")
+         escreval("==========================================================================")
+         escreval("                                      o")
+         escreval("                                  _---|         _ _ _ _ _")
+         escreval("                               o   ---|     o   ]-I-I-I-[")
+         escreval("              _ _ _ _ _ _  _---|      | _---|    \ ` ' /")
+         escreval("              ]-I-I-I-I-[   ---|      |  ---|    |.   |")
+         escreval("               \ `   '_/       |     / \    |    | /^\|")
+         escreval("                [*]  __|       ^    / ^ \   ^    | |*||")
+         escreval("                |__   ,|      / \  /    `\ / \   | ===|")
+         escreval("             ___| ___ ,|__   /    /=_=_=_=\   \  |,  _|")
+         escreval("             I_I__I_I__I_I  (====(_________)___|_|____|____")
+         escreval("             \-\--|-|--/-/  |     I  [ ]__I I_I__|____I_I_|")
+         escreval("              |[]      '|   | []  |`__  . [  \-\--|-|--/-/")
+         escreval("              |.   | |' |___|_____I___|___I___|---------|")
+         escreval("             / \| []   .|_|-|_|-|-|_|-|_|-|_|-| []   [] |")
+         escreval("            <===>  |   .|-=-=-=-=-=-=-=-=-=-=-|   |    / \")
+         escreval("            ] []|`   [] ||.|.|.|.|.|.|.|.|.|.||-      <===>")
+         escreval("            ] []| ` |   |/'/'/'/'/'\'\'\'\'\  ||__.  | |[][")
+         escreval("            <===>     ' ||||| |   |   | ||||.||  []   <===>")
+         escreval("             \T/  | |-- ||||| | O | O | ||||.|| . |'   \T/")
+         escreval("              |      . _||||| |   |   | ||||.|| |     | |")
+         escreval("           ../|' v . | .|||||/____|____\|||| /|. . | . ./")
+         escreval("==========================================================================")
+         escreval("                     O misterio de RavensHollow")
+         escreval("==========================================================================")
+         escreval("")
+         print("Bem-vindo a Ravenshollow, detetive.")
+         print("Durante uma noite marcada por tempestades violentas, Lorde Cedric Ashford foi encontrado morto dentro da antiga sala de armas do castelo.")
+         print("As portas estavam trancadas. Nenhum invasor foi visto deixando o local.")
+         print("Agora, enquanto a chuva isola Ravenshollow do restante da Inglaterra, todos os suspeitos permanecem presos dentro do castelo.")
+         print("A rainha exige que voce conduza a investigacao em absoluto segredo.")
+         print("Mas quanto mais voce observa este lugar... mais percebe que Ravenshollow esconde algo muito pior do que um simples assassinato.")
+         escreval("")
+
+         repita
+
+            decidirSalaCastelo()
+
+            // -----------------------------------------------
+            // SALAO PRINCIPAL
+            // -----------------------------------------------
+            se atual = 1 entao
+               se descrito = falso entao
+                  escreval("------------------------------------------------------------------------|")
+                  escreval("  _                                    _            ________________    |")
+                  escreval(" /_\                                  /_\          ( ´ . ´ |   ´  . )   |")
+                  escreval(" =|=                                  =|=         (´ .  \'.'.'/  ´ .´)  |")
+                  escreval("  ______________________________________         (´´   ´ /-`-\ .´     ) |")
+                  escreval(" /______________________________________\        |´. ´  (/a a\)   ´ .´| |")
+                  escreval("/________________________________________\       |.   .´(\_-_/) ´ ´  .| |")
+                  escreval(" |[][__][__][__][__][__][__][__][][__][| |       | ´ ´ .-~'='~-.  .  ´| |")
+                  escreval(" |[__][__][__][__][__][__][__][][__][_]| |       |. ´ /`~`'Y'`~`\  ´ .| |")
+                  escreval(" |[][__][__][__][__][__][__][][__][__][| |       |´. / /(_ * _)\ \ ´.´| |")
+                  escreval(" |[__][__][__][__][__][__][__][__][_][]| |       |__/ /__)   (__\ \___| |")
+                  escreval(" |[][__][__][__][__][__][_][__][__][__]| |       | ´\ \_/     \_/ /.´ | |")
+                  escreval(" |[__][__]][__][][__][__][__][__][__][]| |       |.  \/_)     (_\/  ´.| |")
+                  escreval(" |[__][__]] |     ,  , .      [__][__][] |       | ´ ´.|       |  ´   | |")
+                  escreval(" |[][__][_] |   . i. '/ ,     [][__][__] |       | . ´ |       | ´.´ .| |")
+                  escreval(" |[__][__]] |  O .\ / /, O    [__][__][] |       |_____|       |______| |")
+                  escreval("_|[][__][_] |__|======='=|____[][__][__] |_____________|       |________|")
+                  escreval("                                                       |       |")
+                  escreval("                                                       |       |")
+                  escreval("                                                       w*W*W*W*w")
+                  escreval("")
+                  print("O grande salao principal permanece mergulhado em um silencio desconfortavel.")
+                  print("As chamas da lareira tremulam enquanto a tempestade golpeia os enormes vitrais do castelo.")
+                  print("Os poucos empregados presentes evitam levantar os olhos, como se temessem ouvir algo.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInt()
+
+               se decisaoInterna = 2 entao
+                  print("A rainha observa voce em silencio diante da lareira.")
+                  print("Ela parece calma demais para alguem que perdeu Cedric.")
+               fimse
+            fimse
+
+            // -----------------------------------------------
+            // BIBLIOTECA
+            // -----------------------------------------------
+            se atual = 2 entao
+               se descrito = falso entao
+
+                  escreval("   __________________________________________________________________________________________________________")
+                  escreval("  |____________________________________________________||____________________________________________________|")
+                  escreval("  ||__     __   ____   ___ ||  ____    ____     _  __  ||___   ___            __||__   __ _ __ __  __    ___||")
+                  escreval("  ||==|^^||--| |=||=| |=*=||| |~~|~|  |=|=|| | |~||==| ||===|=|<|^|=|~|\=\ |=|  ||\ \ |  |_|  ||#||==|  /  /||")
+                  escreval("  ||  |##||  | | || | |JRO|||-|  | |==|+|+||-|-|~||__| ||===| | | | | | \ \| |  || \ \|++|=|  || ||==| /==/ ||")
+                  escreval("  ||__|__||__|_|_||_|_|___|||_|__|_|__|_|_||_|_|_||__|_||___|_|_|_|_|_|_|\ \ |__||__\ |__|_|__||_||__|/_ /__||")
+                  escreval("  ||_______________________||__________________________||______________________ ||__________________________||")
+                  escreval("  ||_____________________  ||  _   __   __  _  __    _ ||_____   _   __   ___|>>||___|^^|_     __   __   ___||")
+                  escreval("  ||=|=|=|=|=|=|=|=|=|=|=| || \ \ |  |_|  ||#||==|  / /||_____|_| |_|##|_|   |==||===|--||__ _|==|_|++|_|-| ||")
+                  escreval("  || | | | | | | | | | | | ||  \ \|++|=|  || ||==| / / ||______||=|#|--| |\\\|>>||+++|^^||  | |  |~|  | | | ||")
+                  escreval("  ||_|_|_|_|_|_|_|_|_|_|_| ||___\ |__|_|__||_||__|/_/__||______||_|_|__|_|___|__||___|__||__|_|__|_|__|_|_| ||")
+                  escreval("  ||_______________________||__________________________||_______________________||__________________________||")
+                  escreval("  ||__   __    _  _     ___||_ ___   _    ___     _____||_____    _ __ _ ___ __ ||___ ___      __   __   _ _||")
+                  escreval("  ||~~|_|..|__| || |_ _|===||-|\~~\ |=|__|~|~|___| | | ||_____|_ |_|##|_|   |==|||===|---|__ _|==|_|++|_|-|^||")
+                  escreval("  ||--|+|^^|==|1||2| | |===||-| \~~\| |==|x|x|+|+|=|=|=||_______||=|##|-|===|\\|||>>||+++|^^| |  | |  |~| |-||")
+                  escreval("  ||__|_|__|__|_||_|_| |___||_|__\~~\_|__|_|_|_|_|_|_|_||________|_|__|_|___|__|||___|___|__|_|__|_|__|_|_|v||")
+                  escreval("  ||_______________________||__________________________||_______________________||__________________________||")
+                  escreval("  ||_____   _   __   ___|>>||___|^^|_     __   __   ___||____ __   ____        _||_ ___     __      ________||")
+                  escreval("  ||_____|_| |_|##|_|   |==||===|--||__ _|==|_|++|_|-||||--|^|\ \ |[]|¨|______| || |\  \   |zz|   _|_\\_____||")
+                  escreval("  ||______||=|#|--| |\\\|>>||+++|^^||  | |  |~|  | | ||||==|v| \ \|++|[||~| |#| || | \vv\  |zz|__|________\\||")
+                  escreval("  ||______||_|_|__|_|___|__||___|__||__|_|__|_|__|_|_||||__|_|__\ \__|_||_|_| |_||_|__\~~\_|__|__:______:___||")
+                  escreval("  ||___________________________________________________||_______________________||__________________________||")
+                  escreval("  ||_    _  /    _________    ______ __        /| _ _ _||_ _ _ _ _ _ _ _ _ _ _ _||__                      __||")
+                  escreval("  |\ \  |=|/   /         /   /  /  / ||       / ||%|%|%||%|%|%|%|%|%|%|%|%|%|%|%||\ \__   ____________  _|  ||")
+                  escreval("  ||\/\ |*/  ./         /   /__/__/  ||      /  ||=|=|=||=|=|=|=|=|=|=|=|=|=|=|=|| \ \ \ |_| ||#||==| |/ /==||")
+                  escreval("__|| \/\|/   /         /             \/     /  /||~|~|~|| | | | | | | | | | | | ||  \ \ \|=| || ||==| / /|~~||__")
+                  escreval("  ||__\_/   /________ /   ________         /  / ||_|_|_||_|_|_|_|_|_|_|_|_|_|_|_||___\ \ \_|_||_||__|/_/_|__||")
+                  escreval("  ||__ /   (|________/   |\_______\       /  /| |______||_______________________||__________________________||")
+                  escreval("      /                  \|________)     /  / | |")
+                  escreval("     /__________________________________/  /")
+                  escreval("    |_____________________________________/|")
+                  escreval("")
+                  print("A antiga biblioteca de Ravenshollow exala cheiro de poeira, couro envelhecido e papel queimado.")
+                  print("Centenas de livros ocupam enormes estantes que desaparecem na escuridao do teto.")
+                  print("Sobre uma mesa proxima da janela, voce encontra restos de documentos parcialmente destruidos pelas chamas.")
+                  print("Alguem tentou esconder informacoes importantes pouco antes da morte de Cedric.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInt()
+
+               se decisaoInterna = 2 entao
+                  pistaBiblioteca <- verdadeiro
+                  print("Voce encontra papeis parcialmente destruidos.")
+                  print("Cedric pretendia revelar segredos comprometedores da familia real.")
+                  print("Pista anotada: Cedric tinha inimigos poderosos dentro do proprio palacio.")
+               fimse
+            fimse
+
+            // -----------------------------------------------
+            // SALA DE ARMAS
+            // -----------------------------------------------
+            se atual = 3 entao
+               se descrito = falso entao
+
+                  escreval(" _______________________________________________________________________________")
+                  escreval("| % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % |")
+                  escreval("|% % % %|-------|% % % % % % % % % % % % % % % % % % % % % |---------| % % % % %|")
+                  escreval("| % % % |   .   | % % % % % % %|------------| % % % % % % %|    /|   |% % % % % |")
+                  escreval("|% % % %|  / \  |% % % % % % % ||`-._/\_.-`||% % % % % % % |   |\|   | % % % % %|")
+                  escreval("| % % % |  | |  | % % % % % % %||    ||    || % % % % % % %|   |||   |% % % % % |")
+                  escreval("|% % _ %|  | |  |% % % % % % % ||___o()o___||% % % % % % % |   |||   | % % _ % %|")
+                  escreval("| % /_\ |  |.|  | % % % % % % %||__((<>))__|| % % % % % % %|   |||   |% % /_\  %|")
+                  escreval("|%  =|= |  |.|  |% % % % % % % |\   o\/o   /|% % % % % % % |   |||   | %  =|= % |")
+                  escreval("|% % % %|  |:|  |  % % % % % % | \   ||   / |% % % % % % % |   |||   | % % % % %|")
+                  escreval("|% % % %|  |:|  | % % % % % % %|  \  ||  /  | % % % % % % %|~-[{o}]-~|% % % % % |")
+                  escreval("|=======|`--8--´|==============|   '.||.'   |==============|   |/|   |==========|")
+                  escreval("|       |   8   |              |     `´     |              |   |/|   |          |")
+                  escreval("|       |   O   |              |------------|              |   `'´   |          |")
+                  escreval("|=======|-------|==========================================|---------|==========|")
+                  escreval("|                                                                               |")
+                  escreval("|                                                                               |")
+                  escreval("|                                                                               |")
+                  escreval("|                                                                               |")
+                  escreval("|                                                                               |")
+                  escreval("|           =+.                                                                 |")
+                  escreval("|         =@@@@@%%=..  .:=**+@@@@@@@@@@@@--:                      #-            |")
+                  escreval("|       *@@@@@@@@@@+.-%@@@@@@@@@@@@@@@@@@%%@@@@@@%%+:           =@@= .#%.       |")
+                  escreval("|=======%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@@%@@@@%%@@@%.========|")
+                  escreval("|________-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=.________|")
+
+                  escreval("")
+                  print("A sala de armas e o local onde o corpo de Cedric foi encontrado.")
+                  print("Proximo da janela, voce encontra pegadas recentes de lama parcialmente escondidas sob o tapete.")
+                  print("As marcas parecem ter sido deixadas propositalmente em um lugar facil demais para serem encontradas.")
+                  print("Mesmo assim, todas as evidencias continuam apontando diretamente para William Ashford.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInt()
+
+               se decisaoInterna = 2 entao
+                  pistaArmas <- verdadeiro
+                  print("Voce encontra pegadas de lama proximas a janela.")
+                  print("As evidencias parecem apontar diretamente para William Ashford.")
+                  print("Pista anotada: As pegadas sao tamanho pequeno. William tem pes grandes...")
+                  print("Alguem pode ter plantado essas provas.")
+               fimse
+            fimse
+
+            // -----------------------------------------------
+            // ALA OESTE
+            // -----------------------------------------------
+            se atual = 4 entao
+               se descrito = falso entao
+                  escreval(" _____________________________________________")
+                  escreval("|.'', \                                 /.,''.|")
+                  escreval("|.'.'',\                               /.''.'.|")
+                  escreval("|.'.'.''\                             /''.'.'.|")
+                  escreval("|.'.'.'.'\                           /'.'.'.'.|")
+                  escreval("|.'.'.'.'.|                         |.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|===;                 ;===|.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|||||',             ,'|||||.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|___|'.|, _______ ,|.'|___|.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|||||'.|'|||||||||'|.'|||||.'.'.'.'.|")
+                  escreval("|,',',',',|___|',|'|-------|'|,'|___|,',',',',|")
+                  escreval("|.'.'.'.'.|||||'.|'|||||||||'|.'|||||.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|___|','   /%%%\   ','|___|.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|||||:'   /#####\     |||||.'.'.'.'.|")
+                  escreval("|.'.'.'.'.|%%%%%%%%%%%%%%%%%%%%%%%%%|.'.'.'.'.|")
+                  escreval("|.'.'.'.','       /#########\       ','.'.'.'.|")
+                  escreval("|.'.'.','        /%%%%%%%%%%%\        ','.'.'.|")
+                  escreval("|.'.','         /#############\         ','.'.|")
+                  escreval("|.','          /%%%%%%%%%%%%%%%\          ','.|")
+                  escreval("|;____________/#################\____________;|")
+                  print("Os corredores da ala oeste sao frios, silenciosos e pouco iluminados.")
+                  print("A umidade cobre as paredes de pedra, e antigos retratos parecem acompanhar cada passo.")
+                  print("Os empregados passam rapidamente, evitando qualquer contato visual.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInt()
+
+               se decisaoInterna = 2 entao
+                  print("Voce encontra marcas recentes de lama no chao.")
+                  print("Existe algo escondido alem daquela parede antiga.")
+                  print("Uma das pedras parece diferente das demais, levemente fora do lugar...")
+               fimse
+            fimse
+
+            // -----------------------------------------------
+            // QUARTOS REAIS
+            // -----------------------------------------------
+            se atual = 5 entao
+               se descrito = falso entao
+                  escreval(" ___________________________________________________________________________________________________________________")
+                  escreval("|                                                                                                                   |")
+                  escreval("|                                               ________________                                                    |")
+                  escreval("|                                     _________[________________]_________                                          |")
+                  escreval("|        _                ___        [____________________________________]             _____________               |")
+                  escreval("|      _{ }_             /!!!\        :++++++++++++++++++++++++++++++++++:             |  _________  |              |")
+                  escreval("|     {     }          /!!   !!\      :**********************************:             | |         | |              |")
+                  escreval("|    {       }        |!!     !!|     :++++++++++==++++++++++==++++++++++:             | |         | |              |")
+                  escreval("|    {       }        |!       !|     :*********====........====*********:             | |         | |              |")
+                  escreval("|     {_   _}         |!!     !!|     :+++++++++===-........-===+++++++++:             | |         | |              |")
+                  escreval("|       {_}    _____   \!!   !!/     :*********====..........====*********:            | |_________| |              |")
+                  escreval("|             ((   ))    \!!!/       :+++++++++===-..........:===+++++++++:            |_____________|              |")
+                  escreval("|            ((  \\ ))              :*********===-............-===*********:                                        |")
+                  escreval("|            ||     ||              :++++++++-==-..............--=-++++++++:                                        |")
+                  escreval("|            || \\  ||             :********-=-..{%%%%%%%%%%%%}..-=-********:  _______________________________      |")
+                  escreval("|          __((     ))__            :++++++-==-{%%%%%%%%%%%%%%%%}-=-+++++++:  ||____O____|____O____|____O____||     |")
+                  escreval("|       __/___(__\\_)___\__          :*****==-{%%%%%%%%%%%%%%%%%%}-=*****:    ||____O____|____O____|____O____||     |")
+                  escreval("|      |___________________|         (---)==={%/(______)(______)\%}===(---)   ||____O___| ____ ____ |____O___||     |")
+                  escreval("|      |___o__|__o__|__o___|        :****...==/                  \===*****:   ||____O___||    |    ||____O___||     |")
+                  escreval("|      |____o____|____o____|       :+++++==__/____________________\__-++++:   ||____O___||    |    ||____O___||     |")
+                  escreval("|      |____o____|____o____|      :*****..{@@@@@@@@@@@@@@@@@@@@@@@@@@}*****:  ||____O___||   {|}   ||____O___||     |")
+                  escreval("|       ||               ||       :+++++-{@@@@@@@@@@@@@@@@@@@@@@@@@@@@}+++++: ||____O___||    |    ||____O___||     |")
+                  escreval("|       ||               ||        :****{@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@}***:  |__________|____|____|_________||     |")
+                  escreval("|       ||               ||         :+++{@@@@@___________________@@@@@@}++:                                         |")
+                  escreval("|       II               II          :**{@@@@|___o__|__o__|__o___|@@@@@}*:                                          |")
+                  escreval("|                            ________________|____o____|____o____|___________________                               |")
+                  escreval("|                         `={                |____o____|____o____|                   }=´                            |")
+                  escreval("|                         `={================|____o____|____o____|===================}=´                            |")
+                  escreval("|                         `={========================================================}=´                            |")
+                  escreval("|                         `={========================================================}=´                            |")
+                  escreval("|                         `={========================================================}=´                            |")
+                  escreval("|                         `={========================================================}=´                            |")
+                  escreval("|                         `={========================================================}=´                            |")
+                  escreval("|                         `={========================================================}=´                            |")
+                  escreval("|                         `={________________________________________________________}=´                            |")
+                  escreval("|___________________________________________________________________________________________________________________|")
+                  print("Os aposentos reais permanecem silenciosos, iluminados apenas por velas quase apagadas.")
+                  print("William Ashford caminha inquieto pelo quarto, claramente abalado pela morte de Cedric.")
+                  print("Apesar da postura nobre, o nervosismo em seu olhar revela que ele esconde mais do que deseja admitir.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInt()
+
+               se decisaoInterna = 2 entao
+                  pistaWilliam <- verdadeiro
+                  print("William admite que discutia frequentemente com Cedric sobre assuntos ligados a sucessao da familia real.")
+                  print("Segundo ele, Cedric sabia demais e estava disposto a destruir a propria coroa para conseguir poder.")
+                  print("Mesmo pressionado pelas evidencias, William insiste desesperadamente que nao matou o proprio pai.")
+                  print("Pista anotada: William parece genuinamente abalado, nao fingindo. Mas quem teria interesse em incrimina-lo?")
+               fimse
+            fimse
+
+            // Liberar masmorras apos reunir as 3 pistas
+            se pistaBiblioteca e pistaArmas e pistaWilliam entao
+               se acessoMasmorra = falso entao
+                  acessoMasmorra <- verdadeiro
+                  escreval("")
+                  print("Ao pressionar uma das pedras da parede antiga da ala oeste, um mecanismo oculto ecoa pelos corredores.")
+                  print("Lentamente, uma passagem secreta se abre diante de voce.")
+                  print("Um forte cheiro de umidade sobe das profundezas do castelo.")
+                  print("As antigas masmorras de Ravenshollow finalmente revelam sua entrada.")
+               fimse
+            fimse
+
+            // -----------------------------------------------
+            // MASMORRAS
+            // -----------------------------------------------
+            se atual = 6 entao
+               se descrito = falso entao
+                  escreval("88888888888888888888888888888888888888888888888888888888888888888888888")
+                  escreval("88.._|      | `-.  | `.  -_-_ _-_  _-  _- -_ -  .'|   |.'|     |  _..88")
+                  escreval("88   `-..   |  |    |`!  |`.  -_ -__ -_ _- _-_-  .'  |.;'   |   _.!-'88")
+                  escreval("88      | `-!. |    |  `;!  _______________ ,'| .-' |   _!.i'        88")
+                  escreval("88..__  |     |`-!. |   | ||_______________||.'|  _!.;'   |     _.-, 88")
+                  escreval("88   |``'..__ |    |`';.| i|_|MMMMMMMMMMM|_|'| _!-|   |   _|..-|'    88")
+                  escreval("88   |      |``--..|_ | `;!|_|MMoMMMMoMMM|_|.'j   |_..!-'|     |     88")
+                  escreval("88   |      |    |   |`-,!_|_|MMMMP'YMMMM|_||.!-;'  |    |     |     88")
+                  escreval("88___|______|____!.,.!,.!,!|_|MMMo * loMM|_|,!,.!.,.!..__|_____|_____88")
+                  escreval("88      |     |    |  |  | |_|MMMMb,dMMMM|_|| |   |   |    |      |  88")
+                  escreval("88      |     |    |..!-;' |_|MPYMoMMMMoM|_| |`-..|   |    |      |  88")
+                  escreval("88      |    _!.-j'  | _!,'|_|(_)MMMMoMMM|_||!._|  `i-!.._ |      |  88")
+                  escreval("88     _!.-'|    | _.'|  !;|_|MbdMMoMMMMM|_|`.| `-._|    |``-.._  |  88")
+                  escreval("88..-|'     |  _.''|  !-| !|_|MMMoMMMMoMM|_|.|`-. | `.\_ |     |` .. 88")
+                  escreval("88   |      |.|    |.|  !| |_|MoMMMMoMMMM|_||`. |`!   | `..    |     88")
+                  escreval("88   |  _.-'  |  .'  |.' |/|_|MMMMoMMMMoM|_|! |`!  `,.|    |-._|     88")
+                  escreval("88  _!''|     !.'|  .'| .'|[@]MMMMMMMMMMM[@] \|  `. | `._  |   `-._  88")
+                  escreval("88-'    |   .'   |.|  |/| /                 \|`.  |`!    |.|      |`-88")
+                  escreval("88      |_.'|   .' | .' |/                   \  \ |  `.  | `._-   |  88")
+                  escreval("88     .'   | .'   |/|  /                     \ |`!   |`.|    `.  |  88")
+                  escreval("88  _.'     !'|   .' | /                       \|  `|`.    |`.|      88")
+                  escreval("88888888888888888888888888888888888888888888888888888888888888888888888")
+                  print("Os corredores subterraneos de Ravenshollow sao estreitos, frios e tomados pela escuridao.")
+                  print("O som constante de gotas de agua ecoa pelas pedras antigas enquanto correntes enferrujadas balancam.")
+                  print("No fim do corredor, uma cela iluminada por uma unica tocha ainda permanece ocupada.")
+                  descrito <- verdadeiro
+               fimse
+
+               decisaoInt()
+
+               se decisaoInterna = 2 entao
+                  verdadeRainha <- verdadeiro
+                  print("Um homem emerge das sombras: Arthur Blake, sicario contratado.")
+                  print("")
+                  print("'A rainha sabia exatamente quem chamar para investigar...'")
+                  print("'Ela precisava de alguem que jamais suspeitaria dela.'")
+                  print("")
+                  print("Arthur Blake confessa: foi contratado pela rainha para eliminar Cedric.")
+                  print("Cedric descobrira um segredo que colocava em risco a legitimidade do trono.")
+                  print("William estava sendo usado como bode expiatorio.")
+               fimse
+            fimse
+
+         ate verdadeRainha = verdadeiro
+
+         // ---------------------------------------------------
+         // ESCOLHA FINAL DO CASTELO
+         // ---------------------------------------------------
+         limpatela
+         escreval("")
+         escreval("================================================")
+         escreval("              ESCOLHA FINAL                     ")
+         escreval("================================================")
+         escreval("")
+         print("Com a verdade em maos, voce enfrenta a decisao mais dificil da sua carreira.")
+         print("A rainha e a mandante do assassinato. Expor isso pode abalar toda a Inglaterra.")
+         print("Mas calar seria trair sua missao como detetive.")
+         escreval("")
+         escreval("[ 1 ] Expor a verdade publicamente")
+         escreval("[ 2 ] Enterrar o caso e proteger a coroa")
+         escreval("")
+         escreva("Decisao: ")
+         leia(decisaoCastelo)
+         limpatela
+
+         se decisaoCastelo = 1 entao
+            print("Voce decide expor publicamente o envolvimento da rainha no assassinato de Cedric.")
+            print("William Ashford e inocentado diante de toda a corte.")
+            print("Nos dias seguintes, a Inglaterra mergulha em uma crise politica sem precedentes.")
+            print("Protestos se espalham pelas ruas enquanto a credibilidade da familia real desmorona.")
+            print("Mas junto da verdade vem o perigo.")
+            print("A guarda real passa a perseguir voce silenciosamente.")
+            print("Talvez Ravenshollow jamais permita que voce saia vivo.")
+            escreval("")
+            telaVitoria()
+            escreval("|======================================================================================|")
+            escreval("|                                                                                      |")
+            escreval("|           A rainha foi responsabilizada. William Ashford foi inocentado.             |")
+            escreval("|           A verdade custou caro, mas a justica foi feita.                            |")
+            escreval("|                                                                                      |")
+            escreval("|           Sua coragem mudou o curso da historia de Ravenshollow.                     |")
+            escreval("|                                                                                      |")
+            escreval("|======================================================================================|")
+         senao
+            print("Voce decide esconder a verdade para proteger a estabilidade da coroa.")
+            print("Arthur Blake assume sozinho a culpa pelo assassinato de Cedric.")
+            print("O caso e encerrado oficialmente poucos dias depois.")
+            print("A Inglaterra permanece em paz.")
+            print("Mas voce sabe que permitiu que uma assassina continuasse no trono.")
+            print("Ao deixar Ravenshollow, a imagem da rainha observando pela janela continua perseguindo seus pensamentos.")
+            escreval("")
+            escreval("|======================================================================================|")
+            escreval("|           O caso foi encerrado. A paz foi mantida. A verdade foi enterrada.          |")
+            escreval("|======================================================================================|")
          fimse
 
-         // Condicao de saida do loop principal em caso de game over
-         se atual = 99 entao
-            atual <- 100  // for�a saida do enquanto verdadeiro
+         escreval("")
+         escreval("|======================================================================================|")
+         escreval("|                    Deseja jogar novamente?                                           |")
+         escreval("|                    [ 1 ] Sim. Voltar ao menu de selecao de mapa                      |")
+         escreval("|                    [ 2 ] Nao. Encerrar o jogo                                        |")
+         escreval("|======================================================================================|")
+         repita
+            escreva("Escolha: ")
+            leia(jogarNovamente)
+            se (jogarNovamente <> 1) e (jogarNovamente <> 2) entao
+               escreval("Opcao invalida! Digite 1 ou 2.")
+            fimse
+         ate (jogarNovamente = 1) ou (jogarNovamente = 2)
+
+         se jogarNovamente = 2 entao
+            jogarNovamente <- 0
          fimse
 
-      fimenquanto
+      outrocaso
+         escreval("")
+         escreval("Opcao invalida!")
 
-      // ----------------------------------------------------------
-      // MAPA 2 � NAVIO (a implementar)
-      // ----------------------------------------------------------
-   caso 2
-      escreval("")
-      escreval("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-      escreval("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-      escreval("@@                                                                                                @@")
-      escreval("@@                                                                                                @@")
-      escreval("@@   #######  ##      ##     ######   ######  ####### ##    ## #######                            @@")
-      escreval("@@   ##       ####  ####     ##   ##  ##   ## ##      ##    ## ##                                 @@")
-      escreval("@@   #####    ## #### ##     #####    #####   ####    ##    ## ####                               @@")
-      escreval("@@   ##       ##  ##  ##     ##   ##  ##  ##  ##       ##  ##  ##                                 @@")
-      escreval("@@   #######  ##      ##     ######   ##   ## #######   ####   ####### # # #                      @@")
-      escreval("@@                                                                                                @@")
-      escreval("@@                                                                                                @@")
-      escreval("@@                O mapa do Navio ainda esta em constru��o. Volte em breve!                       @@")
-      escreval("@@                                                                                                @@")
-      escreval("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-      escreval("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+      fimescolha
 
-      // ----------------------------------------------------------
-      // MAPA 3 � CASTELO (a implementar)
-      // ----------------------------------------------------------
-   caso 3
-      escreval("")
-      escreval("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-      escreval("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-      escreval("@@                                                                                                 @@")
-      escreval("@@                                                                                                 @@")
-      escreval("@@   #########  ###    ###     ######    ######   ######## ##      ##  #########                   @@")
-      escreval("@@   ##        #####  #####    ##   ##   ##   ##  ##       ##      ##  ##                          @@")
-      escreval("@@   ######    ##  ####  ##    ######    #####    #####    ##      ##  #####                       @@")
-      escreval("@@   ##        ##   ##   ##    ##    ##  ##  ##   ##         ##   ##   ##                          @@")
-      escreval("@@   ######### ##        ##    ######    ##   ##  ########    #####    ######### # # #             @@")
-      escreval("@@                                                                                                 @@")
-      escreval("@@                                                                                                 @@")
-      escreval("@@                O mapa do Castelo ainda esta em constru��o. Volte em breve!                        @@")
-      escreval("@@                                                                                                 @@")
-      escreval("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-      escreval("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+   fimenquanto
+   // Fim do Loop Principal
 
-
-
-   outrocaso
-      escreval("")
-      escreval("Opcao invalida!")
-
-   fimescolha
+   // Mensagem de encerramento
+   limpatela
+   escreval("|======================================================================================|")
+   escreval("|                                                                                      |")
+   escreval("|             Obrigado por jogar Detetive! Ate a proxima investigacao.                  |")
+   escreval("|                                                                                      |")
+   escreval("|======================================================================================|")
 
 Fimalgoritmo
